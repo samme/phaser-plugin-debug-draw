@@ -1,6 +1,6 @@
 {
   "name": "phaser-plugin-debug-draw",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Simple debug display",
   "main": "dist/PhaserDebugDrawPlugin.js",
   "files": [
