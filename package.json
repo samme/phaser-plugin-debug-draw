@@ -1,0 +1,43 @@
+{
+  "name": "phaser-plugin-debug-draw",
+  "version": "0.1.0",
+  "description": "Simple debug display",
+  "main": "dist/PhaserDebugDrawPlugin.js",
+  "files": [
+    "/dist",
+    "/src"
+  ],
+  "scripts": {
+    "build": "npx babel src/index.js -o dist/PhaserDebugDrawPlugin.js --source-maps",
+    "start": "npx babel src/index.js --watch -o dist/PhaserDebugDrawPlugin.js --source-maps",
+    "test": "node -c dist/PhaserDebugDrawPlugin.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samme/phaser-plugin-debug-draw.git"
+  },
+  "keywords": [
+    "phaser-plugin",
+    "phaser3-plugin"
+  ],
+  "author": "samme",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samme/phaser-plugin-debug-draw/issues"
+  },
+  "homepage": "https://github.com/samme/phaser-plugin-debug-draw#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^5.9.0",
+    "eslint-config-semistandard": "^13.0.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^8.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0"
+  },
+  "dependencies": {
+    "phaser": "^3.15.1"
+  }
+}

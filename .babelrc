@@ -1,0 +1,11 @@
+{
+  "plugins": [
+    ["transform-es2015-modules-umd", {
+      "globals": {
+        "phaser": "Phaser"
+      }
+    }]
+  ],
+  "moduleId": "phaser-plugin-debug-draw",
+  "presets": ["env"]
+}

@@ -1,0 +1,15 @@
+extends: semistandard
+env:
+  browser: true
+  es6: false
+globals:
+  Phaser: false
+  PhaserDebugDrawPlugin: false
+parserOptions:
+  sourceType: script
+rules:
+  no-console:
+    - warn
+    - allow:
+      - assert
+      - log
