@@ -1,4 +1,4 @@
-![Preview](https://i.imgur.com/b13yOVC.png)
+[![Demo](https://i.imgur.com/b13yOVC.png)](https://codepen.io/samme/full/zMZyOM/ 'Demo')
 
 Phaser 3 Debug Draw Plugin
 ==========================
@@ -8,6 +8,8 @@ It shows:
 - Game Object bounds
 - Bitmap Mask bounds
 - Geometric input areas
+
+[Demo](https://codepen.io/samme/full/zMZyOM/)
 
 Use
 ---
@@ -40,9 +42,11 @@ The default export is the plugin class, identical to the global `PhaserDebugDraw
 ### ES6
 
 ```javascript
-import DebugDrawPlugin from 'phaser-plugin-debug-draw'; // UMD
-// OR
-import DebugDrawPlugin from 'path/to/phaser-plugin-debug-draw/src'; // ES6 module
+// UMD
+import DebugDrawPlugin from 'phaser-plugin-debug-draw';
+// -- OR --
+// ES6 module
+import DebugDrawPlugin from 'path/to/phaser-plugin-debug-draw/src';
 ```
 
 ### CommonJS
