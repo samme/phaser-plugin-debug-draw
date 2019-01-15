@@ -195,7 +195,7 @@
         var hitArea = obj.input.hitArea;
 
         var ctor = hitArea.constructor;
-        var shape = _shapes[ctor.name];
+        var shape = _shapes[ctor.name] || _shapes.Rectangle;
 
         ctor.CopyFrom(hitArea, shape);
         ctor.Offset(shape, getLeft(obj), getTop(obj));

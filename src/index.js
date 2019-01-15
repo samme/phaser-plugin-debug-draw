@@ -108,7 +108,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   drawObjInput (obj) {
     const { hitArea } = obj.input;
     const ctor = hitArea.constructor;
-    const shape = _shapes[ctor.name];
+    const shape = _shapes[ctor.name] || _shapes.Rectangle;
 
     ctor.CopyFrom(hitArea, shape);
     ctor.Offset(shape, getLeft(obj), getTop(obj));
