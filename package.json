@@ -2,7 +2,7 @@
   "name": "phaser-plugin-debug-draw",
   "version": "1.0.3",
   "description": "Simple debug display",
-  "main": "dist/PhaserDebugDrawPlugin.js",
+  "main": "src/index.js",
   "files": [
     "/dist",
     "/src"
@@ -10,7 +10,8 @@
   "scripts": {
     "build": "npx babel src/index.js -o dist/PhaserDebugDrawPlugin.js --source-maps",
     "start": "npx babel src/index.js --watch -o dist/PhaserDebugDrawPlugin.js --source-maps",
-    "test": "node -c dist/PhaserDebugDrawPlugin.js"
+    "test": "npx eslint src/index.js",
+    "test:dist": "node -c dist/PhaserDebugDrawPlugin.js"
   },
   "repository": {
     "type": "git",
