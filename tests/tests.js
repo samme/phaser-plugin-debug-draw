@@ -32,14 +32,14 @@ var scene = {
     bounds = Geom.Rectangle.Clone(this.sys.game.config);
     starfield = this.add.tileSprite(512, 384, 1024, 1024, 'starfield').setBlendMode(1);
     nebula = this.add.tileSprite(512, 384, 1024, 1024, 'nebula').setBlendMode(1);
-    planet = this.add.image(512, 384, 'blue-planet').setScaleMode(Phaser.ScaleModes.LINEAR);
+    planet = this.add.image(512, 384, 'blue-planet');
     maskImage = this.make.image({ key: 'mask', add: false });
 
     planet.setMask(maskImage.createBitmapMask());
 
     var group = this.add.group({
       key: 'elephant',
-      frameQuantity: 5,
+      frameQuantity: 6,
       setXY: { x: 128, y: 64, stepX: 128, stepY: 128 }
     });
 
@@ -70,7 +70,11 @@ var scene = {
       .setInteractive()
       .setVisible(false);
 
-    Phaser.Actions.PropertyValueSet(sprites, 'angle', -5);
+    sprites[5]
+      .setName('polyElephant')
+      .setInteractive(new Geom.Polygon([0, 48, 48, 0, 96, 48, 48, 96]), Geom.Polygon.Contains);
+
+    Phaser.Actions.PropertyValueSet(sprites, 'angle', -15);
 
     this.input
       .setDraggable(sprites, true)
@@ -80,8 +84,8 @@ var scene = {
 
     this.add.tween({
       targets: sprites,
-      angle: 5,
-      duration: 1000,
+      angle: 15,
+      duration: 2000,
       ease: 'Sine.easeInOut',
       loop: -1,
       yoyo: true
@@ -89,24 +93,24 @@ var scene = {
 
     this.add.text(0, 0, 'Drag the elephants around');
 
-    this.debugDraw.bringToTop();
+    // this.debugDraw.bringToTop();
 
     var graphic = this.debugDraw.graphic;
 
     this.input.keyboard
-      .on('keyup_D',
+      .on('keyup-D',
         function () {
           graphic.setVisible(!graphic.visible);
         }, this)
-      .on('keyup_R',
+      .on('keyup-R',
         function () {
           this.scene.restart();
         }, this)
-      .on('keyup_T',
+      .on('keyup-T',
         function () {
           this.scene.remove();
         }, this)
-      .on('keyup_W',
+      .on('keyup-W',
         function () {
           this.cameras.main.setScroll(0, 0).setZoom(1);
         }, this);

@@ -73,14 +73,53 @@
     if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
   }
 
+  var _shapes2, _methods2;
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  var _Phaser$Geom = _phaser2.default.Geom,
+      CIRCLE = _Phaser$Geom.CIRCLE,
+      ELLIPSE = _Phaser$Geom.ELLIPSE,
+      LINE = _Phaser$Geom.LINE,
+      POINT = _Phaser$Geom.POINT,
+      POLYGON = _Phaser$Geom.POLYGON,
+      RECTANGLE = _Phaser$Geom.RECTANGLE,
+      TRIANGLE = _Phaser$Geom.TRIANGLE;
+
   var _inputs = [];
   var _masks = [];
-  var _shapes = {
-    Circle: new _phaser2.default.Geom.Circle(),
-    Ellipse: new _phaser2.default.Geom.Ellipse(),
-    Rectangle: new _phaser2.default.Geom.Rectangle(),
-    Triangle: new _phaser2.default.Geom.Triangle()
-  };
+  var _shapes = (_shapes2 = {}, _defineProperty(_shapes2, CIRCLE, new _phaser2.default.Geom.Circle()), _defineProperty(_shapes2, ELLIPSE, new _phaser2.default.Geom.Ellipse()), _defineProperty(_shapes2, LINE, new _phaser2.default.Geom.Line()), _defineProperty(_shapes2, POLYGON, new _phaser2.default.Geom.Polygon()), _defineProperty(_shapes2, RECTANGLE, new _phaser2.default.Geom.Rectangle()), _defineProperty(_shapes2, TRIANGLE, new _phaser2.default.Geom.Triangle()), _shapes2);
+  var _methods = (_methods2 = {}, _defineProperty(_methods2, CIRCLE, 'strokeCircleShape'), _defineProperty(_methods2, ELLIPSE, 'strokeEllipseShape'), _defineProperty(_methods2, LINE, 'strokeLineShape'), _defineProperty(_methods2, RECTANGLE, 'strokeRectShape'), _defineProperty(_methods2, TRIANGLE, 'strokeTriangleShape'), _methods2);
+
+  function copyPoly(source, dest, ox, oy) {
+    var len = source.points.length;
+
+    dest.points.length = len;
+
+    for (var i = len; i--; i >= 0) {
+      var p = dest.points[i];
+      var q = source.points[i];
+
+      if (p) {
+        p.x = q.x + ox;p.y = q.y + oy;
+      } else {
+        dest.points[i] = { x: q.x + ox, y: q.y + oy };
+      }
+    }
+  }
 
   function getLeft(obj) {
     return obj.originX ? obj.x - obj.originX * obj.displayWidth : obj.x;
@@ -88,18 +127,6 @@
 
   function getTop(obj) {
     return obj.originY ? obj.y - obj.originY * obj.displayHeight : obj.y;
-  }
-
-  function getShapeName(shape) {
-    switch (shape.constructor.name) {
-      default:
-      case 'Rectangle':
-        return 'Rect';
-      case 'Circle':
-      case 'Ellipse':
-      case 'Triangle':
-        return shape.constructor.name;
-    }
   }
 
   var DebugDrawPlugin = function (_Phaser$Plugins$Scene) {
@@ -114,7 +141,7 @@
     _createClass(DebugDrawPlugin, [{
       key: 'boot',
       value: function boot() {
-        this.systems.events.on('start', this.sceneStart, this).on('render', this.sceneRender, this).on('shutdown', this.sceneShutdown, this).once('destroy', this.sceneDestroy, this);
+        this.systems.events.on('start', this.sceneStart, this).on('create', this.bringToTop, this).on('render', this.sceneRender, this).on('shutdown', this.sceneShutdown, this).once('destroy', this.sceneDestroy, this);
       }
     }, {
       key: 'sceneStart',
@@ -195,12 +222,18 @@
         var hitArea = obj.input.hitArea;
 
         var ctor = hitArea.constructor;
-        var shape = _shapes[ctor.name] || _shapes.Rectangle;
+        var shape = _shapes[hitArea.type] || _shapes[RECTANGLE];
 
-        ctor.CopyFrom(hitArea, shape);
-        ctor.Offset(shape, getLeft(obj), getTop(obj));
+        if (shape.type === POLYGON) {
+          copyPoly(hitArea, shape, getLeft(obj), getTop(obj));
 
-        this.graphic['stroke' + getShapeName(shape) + 'Shape'](shape);
+          this.graphic.strokePoints(shape.points, true);
+        } else {
+          ctor.CopyFrom(hitArea, shape);
+          ctor.Offset(shape, getLeft(obj), getTop(obj));
+
+          this.graphic[_methods[shape.type]](shape);
+        }
       }
     }, {
       key: 'drawObjMask',

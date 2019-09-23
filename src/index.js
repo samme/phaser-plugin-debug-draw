@@ -1,13 +1,40 @@
 import Phaser from 'phaser';
 
+const { CIRCLE, ELLIPSE, LINE, POINT, POLYGON, RECTANGLE, TRIANGLE } = Phaser.Geom;
 const _inputs = [];
 const _masks = [];
 const _shapes = {
-  Circle: new Phaser.Geom.Circle(),
-  Ellipse: new Phaser.Geom.Ellipse(),
-  Rectangle: new Phaser.Geom.Rectangle(),
-  Triangle: new Phaser.Geom.Triangle()
+  [CIRCLE]: new Phaser.Geom.Circle(),
+  [ELLIPSE]: new Phaser.Geom.Ellipse(),
+  [LINE]: new Phaser.Geom.Line(),
+  [POLYGON]: new Phaser.Geom.Polygon(),
+  [RECTANGLE]: new Phaser.Geom.Rectangle(),
+  [TRIANGLE]: new Phaser.Geom.Triangle()
 };
+const _methods = {
+  [CIRCLE]: 'strokeCircleShape',
+  [ELLIPSE]: 'strokeEllipseShape',
+  [LINE]: 'strokeLineShape',
+  [RECTANGLE]: 'strokeRectShape',
+  [TRIANGLE]: 'strokeTriangleShape'
+};
+
+function copyPoly (source, dest, ox, oy) {
+  const len = source.points.length;
+
+  dest.points.length = len;
+
+  for (let i = len; i--; i >= 0) {
+    const p = dest.points[i];
+    const q = source.points[i];
+
+    if (p) {
+      p.x = q.x + ox; p.y = q.y + oy;
+    } else {
+      dest.points[i] = { x: q.x + ox, y: q.y + oy };
+    }
+  }
+}
 
 function getLeft (obj) {
   return obj.originX ? (obj.x - obj.originX * obj.displayWidth) : obj.x;
@@ -17,22 +44,11 @@ function getTop (obj) {
   return obj.originY ? (obj.y - obj.originY * obj.displayHeight) : obj.y;
 }
 
-function getShapeName (shape) {
-  switch (shape.constructor.name) {
-    default:
-    case 'Rectangle':
-      return 'Rect';
-    case 'Circle':
-    case 'Ellipse':
-    case 'Triangle':
-      return shape.constructor.name;
-  }
-}
-
 class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   boot () {
     this.systems.events
       .on('start', this.sceneStart, this)
+      .on('create', this.bringToTop, this)
       .on('render', this.sceneRender, this)
       .on('shutdown', this.sceneShutdown, this)
       .once('destroy', this.sceneDestroy, this);
@@ -108,12 +124,18 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   drawObjInput (obj) {
     const { hitArea } = obj.input;
     const ctor = hitArea.constructor;
-    const shape = _shapes[ctor.name] || _shapes.Rectangle;
+    const shape = _shapes[hitArea.type] || _shapes[RECTANGLE];
 
-    ctor.CopyFrom(hitArea, shape);
-    ctor.Offset(shape, getLeft(obj), getTop(obj));
+    if (shape.type === POLYGON) {
+      copyPoly(hitArea, shape, getLeft(obj), getTop(obj));
 
-    this.graphic['stroke' + getShapeName(shape) + 'Shape'](shape);
+      this.graphic.strokePoints(shape.points, true);
+    } else {
+      ctor.CopyFrom(hitArea, shape);
+      ctor.Offset(shape, getLeft(obj), getTop(obj));
+
+      this.graphic[_methods[shape.type]](shape);
+    }
   }
 
   drawObjMask (obj) {

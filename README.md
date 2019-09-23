@@ -5,9 +5,9 @@ Phaser 3 Debug Draw Plugin
 
 It shows:
 
-- Game Object bounds
+- Display Object bounds
 - Bitmap Mask bounds
-- Geometric input areas
+- Geometric input areas (but without scaling or rotation)
 
 [Demo](https://codepen.io/samme/full/zMZyOM/)
 
@@ -24,16 +24,10 @@ new Phaser.Game({
 });
 ```
 
-At the end of the scene's `create` method, add
+Module
+------
 
-```javascript
-this.debugDraw.bringToTop();
-```
-
-Modules
--------
-
-The default export is the plugin class, identical to the global `PhaserDebugDrawPlugin`.
+You can use the default export, which is identical to the global `PhaserDebugDrawPlugin`.
 
 ### ES6
 
