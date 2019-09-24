@@ -1,3 +1,10 @@
+2.1.0 / 2019-09-24
+------------------
+
+- Added polygon hit areas.
+- Added automatic bringToTop() call.
+- Required Phaser v3.19 or above.
+
 2.0.3 / 2019-09-18
 ------------------
 
