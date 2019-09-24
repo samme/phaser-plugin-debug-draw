@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-const { CIRCLE, ELLIPSE, LINE, POINT, POLYGON, RECTANGLE, TRIANGLE } = Phaser.Geom;
+const { CIRCLE, ELLIPSE, LINE, POLYGON, RECTANGLE, TRIANGLE } = Phaser.Geom;
 const _inputs = [];
 const _masks = [];
 const _shapes = {
