@@ -12,7 +12,7 @@
   "scripts": {
     "build": "rollup -c",
     "start": "rollup -c -w",
-    "test": "npx eslint src/index.js",
+    "test": "npx eslint src/main.js",
     "test:dist": "node -c dist/PhaserDebugDrawPlugin.cjs.js; node -c dist/PhaserDebugDrawPlugin.umd.js"
   },
   "repository": {
