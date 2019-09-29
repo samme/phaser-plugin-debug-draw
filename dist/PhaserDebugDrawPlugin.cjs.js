@@ -8,7 +8,6 @@ var ref = Phaser.Geom;
 var CIRCLE = ref.CIRCLE;
 var ELLIPSE = ref.ELLIPSE;
 var LINE = ref.LINE;
-var POINT = ref.POINT;
 var POLYGON = ref.POLYGON;
 var RECTANGLE = ref.RECTANGLE;
 var TRIANGLE = ref.TRIANGLE;
