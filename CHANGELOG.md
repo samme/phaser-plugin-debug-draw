@@ -1,3 +1,8 @@
+3.0.0 / 2019-09-24
+------------------
+
+- Changed the 'main' file. There are now 3 package builds for 'browser' (UMD), 'main' (CommonJS), and 'module' (ES6). 
+
 2.1.0 / 2019-09-24
 ------------------
 
