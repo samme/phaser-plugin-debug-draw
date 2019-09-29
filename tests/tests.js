@@ -1,5 +1,6 @@
-console.assert(Phaser, 'Phaser');
-console.assert(PhaserDebugDrawPlugin, 'Phaser.Plugins.DebugDrawPlugin');
+console.assert(Phaser, 'Missing Phaser');
+console.assert(Phaser.VERSION === '3.19.0', 'Phaser VERSION is not 3.19.0');
+console.assert(PhaserDebugDrawPlugin, 'Missing PhaserDebugDrawPlugin');
 
 var GREEN = 0x00ffff;
 var RED = 0xff0000;
@@ -93,12 +94,10 @@ var scene = {
 
     this.add.text(0, 0, 'Drag the elephants around');
 
-    // this.debugDraw.bringToTop();
-
     var graphic = this.debugDraw.graphic;
 
     this.input.keyboard
-      .on('keyup-D',
+      .on('keyup-T',
         function () {
           graphic.setVisible(!graphic.visible);
         }, this)
@@ -106,11 +105,11 @@ var scene = {
         function () {
           this.scene.restart();
         }, this)
-      .on('keyup-T',
+      .on('keyup-U',
         function () {
           this.scene.remove();
         }, this)
-      .on('keyup-W',
+      .on('keyup-C',
         function () {
           this.cameras.main.setScroll(0, 0).setZoom(1);
         }, this);
