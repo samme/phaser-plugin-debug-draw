@@ -12,6 +12,7 @@
   "scripts": {
     "build": "rollup -c",
     "start": "rollup -c -w",
+    "preversion": "npm run build && npm run test:dist && git add dist",
     "test": "npx eslint src/main.js",
     "test:dist": "node -c dist/PhaserDebugDrawPlugin.cjs.js; node -c dist/PhaserDebugDrawPlugin.umd.js"
   },
