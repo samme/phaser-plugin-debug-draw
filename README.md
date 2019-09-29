@@ -24,13 +24,23 @@ new Phaser.Game({
 });
 ```
 
-Module
-------
+Browser
+-------
 
-You can use the default export, which is identical to the global `PhaserDebugDrawPlugin`.
+```html
+<script src='path/to/PhaserDebugDrawPlugin.umd.js'></script>
+```
 
-### ES6
+ES Module
+---------
 
 ```javascript
 import DebugDrawPlugin from 'phaser-plugin-debug-draw';
+```
+
+CommonJS Module
+---------------
+
+```javascript
+var DebugDrawPlugin = require('phaser-plugin-debug-draw');
 ```
