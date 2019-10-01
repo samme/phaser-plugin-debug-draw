@@ -1,3 +1,8 @@
+3.1.0 / 2019-10-01
+------------------
+
+- Added drawing a point for object position (origin).
+
 3.0.0 / 2019-09-24
 ------------------
 
