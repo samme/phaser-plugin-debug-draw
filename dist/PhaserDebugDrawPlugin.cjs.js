@@ -94,9 +94,12 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     inputs.length = 0;
     masks.length = 0;
 
-    this.graphic.clear().lineStyle(this.lineWidth, this.color, this.alpha);
+    this.graphic.clear()
+      .fillStyle(this.color, this.alpha)
+      .lineStyle(this.lineWidth, this.color, this.alpha);
 
     displayList.each(this.processObj, this, inputs, masks);
+
     if (inputs.length) { this.drawObjsInputs(inputs); }
     if (masks.length) { this.drawObjsMasks(masks); }
   };
@@ -130,12 +133,14 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   };
 
   DebugDrawPlugin.prototype.drawObjsMasks = function drawObjsMasks (objs) {
-    this.graphic.fillStyle(this.maskColor, this.alpha).lineStyle(this.lineWidth, this.maskColor, this.alpha);
+    this.graphic.lineStyle(this.lineWidth, this.maskColor, this.alpha);
     objs.forEach(this.drawObjMask, this);
   };
 
   DebugDrawPlugin.prototype.drawObj = function drawObj (obj) {
-    this.graphic.strokeRect(getLeft(obj), getTop(obj), obj.displayWidth, obj.displayHeight);
+    this.graphic
+      .strokeRect(getLeft(obj), getTop(obj), obj.displayWidth, obj.displayHeight)
+      .fillPoint(obj.x, obj.y, this.lineWidth + 2);
   };
 
   DebugDrawPlugin.prototype.drawObjInput = function drawObjInput (obj) {
