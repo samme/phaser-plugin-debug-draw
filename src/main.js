@@ -157,10 +157,10 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 }
 
 Object.assign(DebugDrawPlugin.prototype, {
-  alpha: 0.5,
+  alpha: 1,
   color: 0x00ddff,
   inputColor: 0xffcc00,
-  lineWidth: 2,
+  lineWidth: 1,
   maskColor: 0xff0022
 });
 
