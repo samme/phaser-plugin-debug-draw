@@ -135,7 +135,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
 
   DebugDrawPlugin.prototype.drawObj = function drawObj (obj) {
     this.graphic
-      .strokeRect(getLeft(obj), getTop(obj), obj.displayWidth, obj.displayHeight)
+      .strokeRect(getLeft(obj), getTop(obj), obj.displayWidth || obj.width, obj.displayHeight || obj.height)
       .fillPoint(obj.x, obj.y, this.lineWidth + 2);
   };
 
@@ -173,10 +173,10 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
 }(Phaser.Plugins.ScenePlugin));
 
 Object.assign(DebugDrawPlugin.prototype, {
-  alpha: 0.5,
+  alpha: 1,
   color: 0x00ddff,
   inputColor: 0xffcc00,
-  lineWidth: 2,
+  lineWidth: 1,
   maskColor: 0xff0022
 });
 
