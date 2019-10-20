@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 const { cos, sin } = Math;
+const _disabledInputs = [];
 const _inputs = [];
 const _masks = [];
 const POINTER_RADIUS = 20;
@@ -37,31 +38,35 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   drawAll () {
-    const inputs = _inputs;
-    const masks = _masks;
     const { displayList, input } = this.systems;
 
     if (!displayList.length) return;
 
-    inputs.length = 0;
-    masks.length = 0;
+    _disabledInputs.length = 0;
+    _inputs.length = 0;
+    _masks.length = 0;
 
     this.graphic.clear()
       .fillStyle(this.color, this.alpha)
       .lineStyle(this.lineWidth, this.color, this.alpha);
 
-    displayList.each(this.processObj, this, inputs, masks);
+    displayList.each(this.processObj, this, _disabledInputs, _inputs, _masks);
 
-    if (inputs.length) this.drawInputs(inputs);
-    if (masks.length) this.drawMasks(masks);
+    if (_disabledInputs.length) this.drawDisabledInputs(_disabledInputs);
+    if (_inputs.length) this.drawInputs(_inputs);
+    if (_masks.length) this.drawMasks(_masks);
     if (input.enabled && this.showPointers) this.drawPointers(this.getPointers());
   }
 
-  processObj (obj, inputs, masks) {
+  processObj (obj, disabledInputs, inputs, masks) {
     this.drawObj(obj);
 
     if (obj.input && this.showInput) {
-      inputs[inputs.length] = obj;
+      if (obj.input.enabled) {
+        inputs[inputs.length] = obj;
+      } else {
+        disabledInputs[disabledInputs.length] = obj;
+      }
     } else {
       this.drawObj(obj);
     }
@@ -83,13 +88,27 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.systems = null;
   }
 
+  drawDisabledInputs (objs) {
+    this.graphic
+      .fillStyle(this.inputDisabledColor, this.alpha)
+      .lineStyle(this.lineWidth, this.inputDisabledColor, this.alpha);
+
+    objs.forEach(this.drawObjInput, this);
+  }
+
   drawInputs (objs) {
-    this.graphic.lineStyle(this.lineWidth, this.inputColor, this.alpha);
+    this.graphic
+      .fillStyle(this.inputColor, this.alpha)
+      .lineStyle(this.lineWidth, this.inputColor, this.alpha);
+
     objs.forEach(this.drawObjInput, this);
   }
 
   drawMasks (objs) {
-    this.graphic.lineStyle(this.lineWidth, this.maskColor, this.alpha);
+    this.graphic
+      .fillStyle(this.maskColor, this.alpha)
+      .lineStyle(this.lineWidth, this.maskColor, this.alpha);
+
     objs.forEach(this.drawObjMask, this);
   }
 
@@ -170,6 +189,7 @@ Object.assign(DebugDrawPlugin.prototype, {
   alpha: 1,
   color: 0x00ddff,
   inputColor: 0xffcc00,
+  inputDisabledColor: 0x886600,
   lineWidth: 1,
   maskColor: 0xff0022,
   pointerColor: 0xffcc00,
