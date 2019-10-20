@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 
+const { cos, sin } = Math;
 const { CIRCLE, ELLIPSE, LINE, POLYGON, RECTANGLE, TRIANGLE } = Phaser.Geom;
 const _inputs = [];
 const _masks = [];
@@ -128,12 +129,16 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       .fillPoint(obj.x, obj.y, 3 * this.lineWidth);
 
     if (obj.rotation) {
-      this.graphic.lineBetween(
-        obj.x,
-        obj.y,
-        obj.x + 0.5 * Math.cos(obj.rotation) * (obj.displayWidth || obj.width),
-        obj.y + 0.5 * Math.sin(obj.rotation) * (obj.displayHeight || obj.height));
+      this.drawObjRotation(obj);
     }
+  }
+
+  drawObjRotation (obj) {
+    this.graphic.lineBetween(
+      obj.x,
+      obj.y,
+      obj.x + 0.5 * cos(obj.rotation) * (obj.displayWidth || obj.width),
+      obj.y + 0.5 * sin(obj.rotation) * (obj.displayHeight || obj.height));
   }
 
   drawObjInput (obj) {
