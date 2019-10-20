@@ -124,6 +124,14 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.graphic
       .strokeRect(getLeft(obj), getTop(obj), obj.displayWidth || obj.width, obj.displayHeight || obj.height)
       .fillPoint(obj.x, obj.y, this.lineWidth + 2);
+
+    if (obj.rotation) {
+      this.graphic.lineBetween(
+        obj.x,
+        obj.y,
+        obj.x + 0.5 * Math.cos(obj.rotation) * (obj.displayWidth || obj.width),
+        obj.y + 0.5 * Math.sin(obj.rotation) * (obj.displayHeight || obj.height));
+    }
   }
 
   drawObjInput (obj) {
