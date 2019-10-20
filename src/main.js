@@ -74,6 +74,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   sceneDestroy () {
     this.systems.events
       .off('start', this.sceneStart, this)
+      .off('create', this.bringToTop, this)
       .off('render', this.sceneRender, this)
       .off('shutdown', this.sceneShutdown, this)
       .off('destroy', this.sceneDestroy, this);
