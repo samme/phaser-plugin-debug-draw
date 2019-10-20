@@ -18,6 +18,7 @@ const _methods = {
   [RECTANGLE]: 'strokeRectShape',
   [TRIANGLE]: 'strokeTriangleShape'
 };
+const POINTER_RADIUS = 20;
 
 function copyPoly (source, dest, ox, oy) {
   const len = source.points.length;
@@ -70,7 +71,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   drawAll () {
     const inputs = _inputs;
     const masks = _masks;
-    const { displayList } = this.systems;
+    const { displayList, input } = this.systems;
 
     if (!displayList.length) return;
 
@@ -85,6 +86,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     if (inputs.length) this.drawObjsInputs(inputs);
     if (masks.length) this.drawObjsMasks(masks);
+    if (input.enabled && this.showPointers) this.drawPointers(this.getPointers());
   }
 
   processObj (obj, inputs, masks) {
@@ -159,6 +161,44 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.drawObj(obj.mask.bitmapMask);
   }
 
+  drawPointers (pointers) {
+    pointers.forEach(this.drawPointer, this);
+  }
+
+  drawPointer (pointer) {
+    if (!pointer.active && !this.showInactivePointers) return;
+
+    const { worldX, worldY } = pointer;
+
+    this.graphic.lineStyle(this.lineWidth, this.getColorForPointer(pointer), this.alpha);
+
+    if (pointer.locked) {
+      this.graphic
+        .strokeRect(worldX - POINTER_RADIUS, worldY - POINTER_RADIUS, 2 * POINTER_RADIUS, 2 * POINTER_RADIUS)
+        .lineBetween(worldX, worldY, worldX + pointer.movementX, worldY + pointer.movementY);
+    } else {
+      this.graphic.strokeCircle(worldX, worldY, POINTER_RADIUS);
+    }
+
+    if (pointer.isDown) {
+      this.graphic.lineBetween(pointer.downX, pointer.downY, worldX, worldY);
+    }
+  }
+
+  getColorForPointer (pointer) {
+    switch (true) {
+      case (pointer.isDown): return this.pointerDownColor;
+      case (!pointer.active): return this.pointerInactiveColor;
+      default: return this.pointerColor;
+    }
+  }
+
+  getPointers () {
+    const { mousePointer, pointer1, pointer2, pointer3, pointer4, pointer5, pointer6, pointer7, pointer8, pointer9 } = this.systems.input;
+
+    return [mousePointer, pointer1, pointer2, pointer3, pointer4, pointer5, pointer6, pointer7, pointer8, pointer9].filter(Boolean);
+  }
+
   bringToTop () {
     this.systems.displayList.bringToTop(this.graphic);
   }
@@ -169,7 +209,12 @@ Object.assign(DebugDrawPlugin.prototype, {
   color: 0x00ddff,
   inputColor: 0xffcc00,
   lineWidth: 1,
-  maskColor: 0xff0022
+  maskColor: 0xff0022,
+  pointerColor: 0x00ff22,
+  pointerDownColor: 0xff2200,
+  pointerInactiveColor: 0x888888,
+  showPointers: true,
+  showInactivePointers: true
 });
 
 if (typeof window !== 'undefined') {
