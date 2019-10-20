@@ -94,12 +94,10 @@ var scene = {
 
     this.add.text(0, 0, 'Drag the elephants around');
 
-    var graphic = this.debugDraw.graphic;
-
     this.input.keyboard
       .on('keyup-T',
         function () {
-          graphic.setVisible(!graphic.visible);
+          this.debugDraw.toggle();
         }, this)
       .on('keyup-R',
         function () {
@@ -112,7 +110,27 @@ var scene = {
       .on('keyup-C',
         function () {
           this.cameras.main.setScroll(0, 0).setZoom(1);
-        }, this);
+        }, this)
+      .on('keyup-I',
+        function () {
+          this.debugDraw.showInput = !this.debugDraw.showInput;
+        }, this)
+      .on('keyup-P',
+        function () {
+          this.debugDraw.showPointers = !this.debugDraw.showPointers;
+        }, this)
+      .on('keyup-O',
+        function () {
+          this.debugDraw.showRotation = !this.debugDraw.showRotation;
+        }, this)
+      .once('keyup-S', function () {
+        this.game.renderer.snapshot(function (image) {
+          image.style.width = '200px';
+          image.style.height = '150px';
+
+          document.body.appendChild(image);
+        });
+      });
 
     var cursors = this.input.keyboard.createCursorKeys();
 
@@ -126,6 +144,8 @@ var scene = {
       zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E),
       speed: 0.2
     });
+
+    console.log('debugDraw', this.debugDraw);
   },
 
   update: function (time, delta) {
