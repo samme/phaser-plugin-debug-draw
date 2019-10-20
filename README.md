@@ -5,9 +5,10 @@ Phaser 3 Debug Draw Plugin
 
 It shows:
 
-- Display Object bounds
-- Bitmap Mask bounds
-- Geometric input areas (but without scaling or rotation)
+- Display Object bounds and rotation
+- Bitmap Mask bounds and rotation
+- Geometric input hit areas (but without scaling or rotation)
+- Input pointers
 
 [Demo](https://codepen.io/samme/full/zMZyOM/)
 

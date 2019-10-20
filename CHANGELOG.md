@@ -1,3 +1,10 @@
+3.3.0 / 2019-10-20
+------------------
+
+- Added display of input pointers.
+- Added display of object rotation.
+- Changed the size of the origin point.
+
 3.2.0 / 2019-10-19
 ------------------
 
