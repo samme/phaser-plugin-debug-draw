@@ -6,6 +6,8 @@
 
   Phaser = Phaser && Phaser.hasOwnProperty('default') ? Phaser['default'] : Phaser;
 
+  var cos = Math.cos;
+  var sin = Math.sin;
   var ref = Phaser.Geom;
   var CIRCLE = ref.CIRCLE;
   var ELLIPSE = ref.ELLIPSE;
@@ -28,6 +30,7 @@
   _methods[LINE] = 'strokeLineShape';
   _methods[RECTANGLE] = 'strokeRectShape';
   _methods[TRIANGLE] = 'strokeTriangleShape';
+  var POINTER_RADIUS = 20;
 
   function copyPoly (source, dest, ox, oy) {
     var len = source.points.length;
@@ -90,6 +93,7 @@
       var masks = _masks;
       var ref = this.systems;
       var displayList = ref.displayList;
+      var input = ref.input;
 
       if (!displayList.length) { return; }
 
@@ -104,6 +108,7 @@
 
       if (inputs.length) { this.drawObjsInputs(inputs); }
       if (masks.length) { this.drawObjsMasks(masks); }
+      if (input.enabled && this.showPointers) { this.drawPointers(this.getPointers()); }
     };
 
     DebugDrawPlugin.prototype.processObj = function processObj (obj, inputs, masks) {
@@ -142,7 +147,19 @@
     DebugDrawPlugin.prototype.drawObj = function drawObj (obj) {
       this.graphic
         .strokeRect(getLeft(obj), getTop(obj), obj.displayWidth || obj.width, obj.displayHeight || obj.height)
-        .fillPoint(obj.x, obj.y, this.lineWidth + 2);
+        .fillPoint(obj.x, obj.y, 3 * this.lineWidth);
+
+      if (obj.rotation) {
+        this.drawObjRotation(obj);
+      }
+    };
+
+    DebugDrawPlugin.prototype.drawObjRotation = function drawObjRotation (obj) {
+      this.graphic.lineBetween(
+        obj.x,
+        obj.y,
+        obj.x + 0.5 * cos(obj.rotation) * (obj.displayWidth || obj.width),
+        obj.y + 0.5 * sin(obj.rotation) * (obj.displayHeight || obj.height));
     };
 
     DebugDrawPlugin.prototype.drawObjInput = function drawObjInput (obj) {
@@ -171,6 +188,55 @@
       this.drawObj(obj.mask.bitmapMask);
     };
 
+    DebugDrawPlugin.prototype.drawPointers = function drawPointers (pointers) {
+      pointers.forEach(this.drawPointer, this);
+    };
+
+    DebugDrawPlugin.prototype.drawPointer = function drawPointer (pointer) {
+      if (!pointer.active && !this.showInactivePointers) { return; }
+
+      var worldX = pointer.worldX;
+      var worldY = pointer.worldY;
+
+      this.graphic.lineStyle(this.lineWidth, this.getColorForPointer(pointer), this.alpha);
+
+      if (pointer.locked) {
+        this.graphic
+          .strokeRect(worldX - POINTER_RADIUS, worldY - POINTER_RADIUS, 2 * POINTER_RADIUS, 2 * POINTER_RADIUS)
+          .lineBetween(worldX, worldY, worldX + pointer.movementX, worldY + pointer.movementY);
+      } else {
+        this.graphic.strokeCircle(worldX, worldY, POINTER_RADIUS);
+      }
+
+      if (pointer.isDown) {
+        this.graphic.lineBetween(pointer.downX, pointer.downY, worldX, worldY);
+      }
+    };
+
+    DebugDrawPlugin.prototype.getColorForPointer = function getColorForPointer (pointer) {
+      switch (true) {
+        case (pointer.isDown): return this.pointerDownColor;
+        case (!pointer.active): return this.pointerInactiveColor;
+        default: return this.pointerColor;
+      }
+    };
+
+    DebugDrawPlugin.prototype.getPointers = function getPointers () {
+      var ref = this.systems.input;
+      var mousePointer = ref.mousePointer;
+      var pointer1 = ref.pointer1;
+      var pointer2 = ref.pointer2;
+      var pointer3 = ref.pointer3;
+      var pointer4 = ref.pointer4;
+      var pointer5 = ref.pointer5;
+      var pointer6 = ref.pointer6;
+      var pointer7 = ref.pointer7;
+      var pointer8 = ref.pointer8;
+      var pointer9 = ref.pointer9;
+
+      return [mousePointer, pointer1, pointer2, pointer3, pointer4, pointer5, pointer6, pointer7, pointer8, pointer9].filter(Boolean);
+    };
+
     DebugDrawPlugin.prototype.bringToTop = function bringToTop () {
       this.systems.displayList.bringToTop(this.graphic);
     };
@@ -183,7 +249,12 @@
     color: 0x00ddff,
     inputColor: 0xffcc00,
     lineWidth: 1,
-    maskColor: 0xff0022
+    maskColor: 0xff0022,
+    pointerColor: 0x00ff22,
+    pointerDownColor: 0xff2200,
+    pointerInactiveColor: 0x888888,
+    showPointers: true,
+    showInactivePointers: true
   });
 
   if (typeof window !== 'undefined') {
