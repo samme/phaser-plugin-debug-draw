@@ -145,7 +145,10 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   drawPointer (pointer) {
     if (!pointer.active && !this.showInactivePointers) return;
 
-    const { worldX, worldY } = pointer;
+    let { worldX, worldY } = pointer;
+
+    worldX -= this.systems.cameras.main.x;
+    worldY -= this.systems.cameras.main.y;
 
     this.graphic.lineStyle(this.lineWidth, this.getColorForPointer(pointer), this.alpha);
 
