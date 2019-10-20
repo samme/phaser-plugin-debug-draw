@@ -1,42 +1,9 @@
 import Phaser from 'phaser';
 
 const { cos, sin } = Math;
-const { CIRCLE, ELLIPSE, LINE, POLYGON, RECTANGLE, TRIANGLE } = Phaser.Geom;
 const _inputs = [];
 const _masks = [];
-const _shapes = {
-  [CIRCLE]: new Phaser.Geom.Circle(),
-  [ELLIPSE]: new Phaser.Geom.Ellipse(),
-  [LINE]: new Phaser.Geom.Line(),
-  [POLYGON]: new Phaser.Geom.Polygon(),
-  [RECTANGLE]: new Phaser.Geom.Rectangle(),
-  [TRIANGLE]: new Phaser.Geom.Triangle()
-};
-const _methods = {
-  [CIRCLE]: 'strokeCircleShape',
-  [ELLIPSE]: 'strokeEllipseShape',
-  [LINE]: 'strokeLineShape',
-  [RECTANGLE]: 'strokeRectShape',
-  [TRIANGLE]: 'strokeTriangleShape'
-};
 const POINTER_RADIUS = 20;
-
-function copyPoly (source, dest, ox, oy) {
-  const len = source.points.length;
-
-  dest.points.length = len;
-
-  for (let i = len; i--; i >= 0) {
-    const p = dest.points[i];
-    const q = source.points[i];
-
-    if (p) {
-      p.x = q.x + ox; p.y = q.y + oy;
-    } else {
-      dest.points[i] = { x: q.x + ox, y: q.y + oy };
-    }
-  }
-}
 
 function getLeft (obj) {
   return obj.originX ? (obj.x - obj.originX * obj.displayWidth) : obj.x;
@@ -85,8 +52,8 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     displayList.each(this.processObj, this, inputs, masks);
 
-    if (inputs.length) this.drawObjsInputs(inputs);
-    if (masks.length) this.drawObjsMasks(masks);
+    if (inputs.length) this.drawInputs(inputs);
+    if (masks.length) this.drawMasks(masks);
     if (input.enabled && this.showPointers) this.drawPointers(this.getPointers());
   }
 
@@ -95,6 +62,8 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     if (obj.input && this.showInput) {
       inputs[inputs.length] = obj;
+    } else {
+      this.drawObj(obj);
     }
 
     if (obj.mask && masks.indexOf(obj) === -1) {
@@ -113,12 +82,12 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.systems = null;
   }
 
-  drawObjsInputs (objs) {
+  drawInputs (objs) {
     this.graphic.lineStyle(this.lineWidth, this.inputColor, this.alpha);
     objs.forEach(this.drawObjInput, this);
   }
 
-  drawObjsMasks (objs) {
+  drawMasks (objs) {
     this.graphic.lineStyle(this.lineWidth, this.maskColor, this.alpha);
     objs.forEach(this.drawObjMask, this);
   }
@@ -142,28 +111,11 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   drawObjInput (obj) {
-    const { hitArea } = obj.input;
-    const ctor = hitArea.constructor;
-    const shape = _shapes[hitArea.type] || _shapes[RECTANGLE];
-
-    if (shape.type === POLYGON) {
-      copyPoly(hitArea, shape, getLeft(obj), getTop(obj));
-
-      this.graphic.strokePoints(shape.points, true);
-    } else {
-      ctor.CopyFrom(hitArea, shape);
-      ctor.Offset(shape, getLeft(obj), getTop(obj));
-
-      this.graphic[_methods[shape.type]](shape);
-    }
+    this.drawObj(obj);
   }
 
   drawObjMask (obj) {
-    if (obj.mask.bitmapMask) this.drawObjBitmapMask(obj);
-  }
-
-  drawObjBitmapMask (obj) {
-    this.drawObj(obj.mask.bitmapMask);
+    if (obj.mask.bitmapMask) this.drawObj(obj.mask.bitmapMask);
   }
 
   drawPointers (pointers) {
