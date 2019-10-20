@@ -1,3 +1,0 @@
-- [Browser](PhaserDebugDrawPlugin.umd.js)
-- [ES module](PhaserDebugDrawPlugin.esm.js)
-- [CommonJS module](PhaserDebugDrawPlugin.cjs.js)

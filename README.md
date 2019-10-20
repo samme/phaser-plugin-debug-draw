@@ -29,7 +29,7 @@ Browser
 -------
 
 ```html
-<script src='path/to/PhaserDebugDrawPlugin.umd.js'></script>
+<script src='path/to/phaser-plugin-debug-draw.umd.js'></script>
 ```
 
 ES Module

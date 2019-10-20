@@ -2,9 +2,9 @@
   "name": "phaser-plugin-debug-draw",
   "version": "3.4.0",
   "description": "Simple debug display for Phaser 3",
-  "main": "dist/PhaserDebugDrawPlugin.cjs.js",
-  "module": "dist/PhaserDebugDrawPlugin.esm.js",
-  "browser": "dist/PhaserDebugDrawPlugin.umd.js",
+  "main": "dist/phaser-plugin-debug-draw.cjs.js",
+  "module": "dist/phaser-plugin-debug-draw.esm.js",
+  "browser": "dist/phaser-plugin-debug-draw.umd.js",
   "files": [
     "/dist",
     "/src"
@@ -14,7 +14,7 @@
     "start": "rollup -c -w",
     "preversion": "npm run build && npm run test:dist && git add dist",
     "test": "npx eslint src/main.js",
-    "test:dist": "node -c dist/PhaserDebugDrawPlugin.cjs.js; node -c dist/PhaserDebugDrawPlugin.umd.js"
+    "test:dist": "node -c dist/phaser-plugin-debug-draw.cjs.js; node -c dist/phaser-plugin-debug-draw.umd.js"
   },
   "repository": {
     "type": "git",
