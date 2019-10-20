@@ -1,3 +1,9 @@
+3.2.0 / 2019-10-19
+------------------
+
+- Changed the default styles to 100% alpha and 1px stroke width.
+- Added proper dimensions for objects with no `displayWidth` and `displayHeight`.
+
 3.1.0 / 2019-10-01
 ------------------
 
