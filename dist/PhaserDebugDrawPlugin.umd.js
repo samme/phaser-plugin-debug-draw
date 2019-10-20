@@ -114,7 +114,7 @@
     DebugDrawPlugin.prototype.processObj = function processObj (obj, inputs, masks) {
       this.drawObj(obj);
 
-      if (obj.input) {
+      if (obj.input && this.showInput) {
         inputs[inputs.length] = obj;
       }
 
@@ -149,7 +149,7 @@
         .strokeRect(getLeft(obj), getTop(obj), obj.displayWidth || obj.width, obj.displayHeight || obj.height)
         .fillPoint(obj.x, obj.y, 3 * this.lineWidth);
 
-      if (obj.rotation) {
+      if (obj.rotation && this.showRotation) {
         this.drawObjRotation(obj);
       }
     };
@@ -241,6 +241,10 @@
       this.systems.displayList.bringToTop(this.graphic);
     };
 
+    DebugDrawPlugin.prototype.toggle = function toggle () {
+      this.graphic.setVisible(!this.graphic.visible);
+    };
+
     return DebugDrawPlugin;
   }(Phaser.Plugins.ScenePlugin));
 
@@ -250,11 +254,13 @@
     inputColor: 0xffcc00,
     lineWidth: 1,
     maskColor: 0xff0022,
-    pointerColor: 0x00ff22,
-    pointerDownColor: 0xff2200,
+    pointerColor: 0xffcc00,
+    pointerDownColor: 0x00ff22,
     pointerInactiveColor: 0x888888,
     showPointers: true,
-    showInactivePointers: true
+    showInactivePointers: true,
+    showInput: true,
+    showRotation: true
   });
 
   if (typeof window !== 'undefined') {
