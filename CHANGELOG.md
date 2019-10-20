@@ -1,3 +1,10 @@
+3.4.0 / 2019-10-20
+------------------
+
+- Added toggle method.
+- Added `showInput` and `showRotation` options.
+- Changed the default pointer colors.
+
 3.3.0 / 2019-10-20
 ------------------
 
