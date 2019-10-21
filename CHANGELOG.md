@@ -1,3 +1,15 @@
+3.5.0 / 2019-10-21
+------------------
+
+- Removed display of input hit area shapes. This is better done with [input.enableDebug()][1].
+- Added display of object interactive status and `inputDisabledColor` option.
+- Added display of TileSprite texture origin and `showTilePosition` option.
+- Changed: scenes that are inactive (paused) or have input disabled show no input colors and no pointers.
+- Fixed rotation angle.
+- Fixed pointer position for offset cameras.
+
+[1]: https://photonstorm.github.io/phaser3-docs/Phaser.Input.InputPlugin.html#enableDebug
+
 3.4.0 / 2019-10-20
 ------------------
 

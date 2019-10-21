@@ -5,9 +5,9 @@ Phaser 3 Debug Draw Plugin
 
 It shows:
 
-- Display Object bounds and rotation
+- Display Object bounds and rotation, colored by interactive status
 - Bitmap Mask bounds and rotation
-- Geometric input hit areas (but without scaling or rotation)
+- TileSprite texture origins
 - Input pointers
 
 [Demo](https://codepen.io/samme/full/zMZyOM/)
