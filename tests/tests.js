@@ -36,44 +36,31 @@ var scene = {
     planet = this.add.image(512, 384, 'blue-planet');
     maskImage = this.make.image({ key: 'mask', add: false });
 
-    planet.setMask(maskImage.createBitmapMask());
+    var mask = maskImage.createBitmapMask();
+
+    planet.setMask(mask);
 
     var group = this.add.group({
       key: 'elephant',
       frameQuantity: 6,
-      setXY: { x: 128, y: 64, stepX: 128, stepY: 128 }
+      setXY: { x: 128, y: 64, stepX: 128, stepY: 128 },
+      hitArea: new Geom.Rectangle(-16, 16, 128, 64),
+      hitAreaCallback: Geom.Rectangle.Contains
     });
 
     sprites = group.getChildren();
 
     sprites[0]
-      .setName('triangularElephant')
-      .setOrigin(0.5, 0)
-      .setInteractive(new Geom.Triangle(0, 96, 48, 0, 96, 96), Geom.Triangle.Contains);
-
-    sprites[1]
-      .setName('circularElephant')
-      .setOrigin(0.5, 0.5)
-      .setInteractive(new Geom.Circle(48, 48, 48), Geom.Circle.Contains);
-
-    sprites[2]
-      .setName('ellipsoidElephant')
-      .setOrigin(0, 0.5)
-      .setInteractive(new Geom.Ellipse(48, 48, 96, 64), Geom.Ellipse.Contains);
-
-    sprites[3]
-      .setName('rectangularElephant')
-      .setOrigin(0.5, 1)
-      .setInteractive(new Geom.Rectangle(-16, 16, 128, 64), Geom.Rectangle.Contains);
+      .setName('inertElephant')
+      .disableInteractive();
 
     sprites[4]
       .setName('invisibleElephant')
-      .setInteractive()
       .setVisible(false);
 
     sprites[5]
-      .setName('polyElephant')
-      .setInteractive(new Geom.Polygon([0, 48, 48, 0, 96, 48, 48, 96]), Geom.Polygon.Contains);
+      .setName('maskedElephant')
+      .setMask(mask);
 
     Phaser.Actions.PropertyValueSet(sprites, 'angle', -15);
 
@@ -155,8 +142,10 @@ var scene = {
     nebula.tilePositionX -= 0.5;
     starfield.tilePositionX -= 0.25;
     planet.angle += 0.1;
+
     IncX(sprites, -1);
     WrapInRectangle(sprites, bounds, 50);
+
     controls.update(delta);
   }
 
@@ -167,5 +156,6 @@ window.game = new Phaser.Game({
   plugins: {
     scene: [{ key: 'DebugDrawPlugin', plugin: PhaserDebugDrawPlugin, mapping: 'debugDraw' }]
   },
-  loader: { path: 'assets/' }
+  loader: { path: 'assets/' },
+  audio: { noAudio: true }
 });
