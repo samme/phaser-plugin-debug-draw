@@ -215,9 +215,9 @@ Object.assign(DebugDrawPlugin.prototype, {
   pointerColor: 0xffcc00,
   pointerDownColor: 0x00ff22,
   pointerInactiveColor: 0x888888,
-  showPointers: true,
   showInactivePointers: true,
   showInput: true,
+  showPointers: true,
   showRotation: true,
   showTilePosition: true
 });
