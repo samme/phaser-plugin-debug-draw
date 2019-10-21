@@ -61,8 +61,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   processObj (obj, disabledInputs, inputs, masks, showInput) {
-    this.drawObj(obj);
-
     if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputs[inputs.length] = obj;
