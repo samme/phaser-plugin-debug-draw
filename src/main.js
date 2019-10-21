@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 
-const { cos, sin } = Math;
+const { cos, max, sin } = Math;
 const _disabledInputs = [];
 const _inputs = [];
 const _masks = [];
@@ -138,11 +138,13 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   drawObjRotation (obj) {
+    const length = 0.5 * max((obj.displayWidth || obj.width), (obj.displayHeight || obj.height));
+
     this.graphic.lineBetween(
       obj.x,
       obj.y,
-      obj.x + 0.5 * cos(obj.rotation) * (obj.displayWidth || obj.width),
-      obj.y + 0.5 * sin(obj.rotation) * (obj.displayHeight || obj.height));
+      obj.x + cos(obj.rotation) * length,
+      obj.y + sin(obj.rotation) * length);
   }
 
   drawObjInput (obj) {
