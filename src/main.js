@@ -38,7 +38,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   drawAll () {
-    const { displayList, input } = this.systems;
+    const { displayList } = this.systems;
 
     if (!displayList.length) return;
 
@@ -50,18 +50,20 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       .fillStyle(this.color, this.alpha)
       .lineStyle(this.lineWidth, this.color, this.alpha);
 
-    displayList.each(this.processObj, this, _disabledInputs, _inputs, _masks);
+    const showInput = this.showInput && this.systems.input.isActive();
+
+    displayList.each(this.processObj, this, _disabledInputs, _inputs, _masks, showInput);
 
     if (_disabledInputs.length) this.drawDisabledInputs(_disabledInputs);
     if (_inputs.length) this.drawInputs(_inputs);
     if (_masks.length) this.drawMasks(_masks);
-    if (input.enabled && this.showPointers) this.drawPointers(this.getPointers());
+    if (showInput && this.showPointers) this.drawPointers(this.getPointers());
   }
 
-  processObj (obj, disabledInputs, inputs, masks) {
+  processObj (obj, disabledInputs, inputs, masks, showInput) {
     this.drawObj(obj);
 
-    if (obj.input && this.showInput) {
+    if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputs[inputs.length] = obj;
       } else {
