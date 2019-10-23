@@ -129,8 +129,8 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   drawObjTilePosition (obj) {
     let { tilePositionX, tilePositionY } = obj;
 
-    const x = obj.x + tilePositionX;
-    const y = obj.y + tilePositionY;
+    const x = obj.x - tilePositionX;
+    const y = obj.y - tilePositionY;
 
     this.graphic
       .lineBetween(x - 5, y - 5, x + 5, y + 5)
