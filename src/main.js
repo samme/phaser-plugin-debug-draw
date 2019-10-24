@@ -7,11 +7,11 @@ const _masks = [];
 const POINTER_RADIUS = 20;
 
 function getLeft (obj) {
-  return obj.displayOriginX ? (obj.x - obj.displayOriginX) : obj.x;
+  return obj.originX ? (obj.x - obj.originX * (obj.displayWidth || obj.width)) : obj.x;
 }
 
 function getTop (obj) {
-  return obj.displayOriginY ? (obj.y - obj.displayOriginY) : obj.y;
+  return obj.originY ? (obj.y - obj.originY * (obj.displayHeight || obj.height)) : obj.y;
 }
 
 class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
