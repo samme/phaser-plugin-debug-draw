@@ -1,18 +1,8 @@
 import Phaser from 'phaser';
 
 const { cos, max, sin } = Math;
-const _disabledInputs = [];
-const _inputs = [];
-const _masks = [];
+
 const POINTER_RADIUS = 20;
-
-function getLeft (obj) {
-  return obj.originX ? (obj.x - obj.originX * (obj.displayWidth || obj.width)) : obj.x;
-}
-
-function getTop (obj) {
-  return obj.originY ? (obj.y - obj.originY * (obj.displayHeight || obj.height)) : obj.y;
-}
 
 class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   boot () {
@@ -42,22 +32,32 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     if (!displayList.length) return;
 
-    _disabledInputs.length = 0;
-    _inputs.length = 0;
-    _masks.length = 0;
+    const disabledInputs = [];
+    const inputs = [];
+    const masks = [];
+    const showInput = this.showInput && this.systems.input.isActive();
 
     this.graphic.clear()
       .fillStyle(this.color, this.alpha)
       .lineStyle(this.lineWidth, this.color, this.alpha);
 
-    const showInput = this.showInput && this.systems.input.isActive();
+    displayList.each(this.processObj, this, disabledInputs, inputs, masks, showInput);
 
-    displayList.each(this.processObj, this, _disabledInputs, _inputs, _masks, showInput);
+    if (disabledInputs.length) {
+      this.drawDisabledInputs(disabledInputs);
+    }
 
-    if (_disabledInputs.length) this.drawDisabledInputs(_disabledInputs);
-    if (_inputs.length) this.drawInputs(_inputs);
-    if (_masks.length) this.drawMasks(_masks);
-    if (showInput && this.showPointers) this.drawPointers(this.getPointers());
+    if (inputs.length) {
+      this.drawInputs(inputs);
+    }
+
+    if (masks.length) {
+      this.drawMasks(masks);
+    }
+
+    if (showInput && this.showPointers) {
+      this.drawPointers(this.getPointers());
+    }
   }
 
   processObj (obj, disabledInputs, inputs, masks, showInput) {
@@ -113,9 +113,16 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   drawObj (obj) {
-    this.graphic
-      .strokeRect(getLeft(obj), getTop(obj), (obj.displayWidth || obj.width), (obj.displayHeight || obj.height))
-      .fillPoint(obj.x, obj.y, 3 * this.lineWidth);
+    const width = obj.displayWidth || obj.width;
+    const height = obj.displayHeight || obj.height;
+    const left = obj.originX ? (obj.x - obj.originX * width) : obj.x;
+    const top = obj.originY ? (obj.y - obj.originY * height) : obj.y;
+
+    this.graphic.fillPoint(obj.x, obj.y, 3 * this.lineWidth);
+
+    if (width || height) {
+      this.graphic.strokeRect(left, top, width, height);
+    }
 
     if (obj.rotation && this.showRotation) {
       this.drawObjRotation(obj);
@@ -190,9 +197,20 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   getPointers () {
-    const { mousePointer, pointer1, pointer2, pointer3, pointer4, pointer5, pointer6, pointer7, pointer8, pointer9 } = this.systems.input;
+    const { input } = this.systems;
 
-    return [mousePointer, pointer1, pointer2, pointer3, pointer4, pointer5, pointer6, pointer7, pointer8, pointer9].filter(Boolean);
+    return [
+      input.mousePointer,
+      input.pointer1,
+      input.pointer2,
+      input.pointer3,
+      input.pointer4,
+      input.pointer5,
+      input.pointer6,
+      input.pointer7,
+      input.pointer8,
+      input.pointer9
+    ].filter(Boolean);
   }
 
   bringToTop () {
