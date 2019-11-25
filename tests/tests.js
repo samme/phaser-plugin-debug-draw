@@ -132,7 +132,7 @@ var scene = {
       speed: 0.2
     });
 
-    console.log('debugDraw', this.debugDraw);
+    console.log('this.debugDraw', this.debugDraw);
   },
 
   update: function (time, delta) {
