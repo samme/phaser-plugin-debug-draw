@@ -169,9 +169,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   drawPointer (pointer) {
     if (!pointer.active && !this.showInactivePointers) return;
 
-    const { x, y } = this.systems.cameras.main;
-    const worldX = pointer.worldX - x;
-    const worldY = pointer.worldY - y;
+    const { worldX, worldY } = pointer;
 
     this.graphic.lineStyle(this.lineWidth, this.getColorForPointer(pointer), this.alpha);
 
@@ -181,10 +179,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
         .lineBetween(worldX, worldY, worldX + pointer.movementX, worldY + pointer.movementY);
     } else {
       this.graphic.strokeCircle(worldX, worldY, POINTER_RADIUS);
-    }
-
-    if (pointer.isDown) {
-      this.graphic.lineBetween(pointer.downX - x, pointer.downY - y, worldX, worldY);
     }
   }
 
