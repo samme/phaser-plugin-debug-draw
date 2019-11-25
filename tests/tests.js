@@ -1,6 +1,6 @@
-console.assert(Phaser, 'Missing Phaser');
-console.assert(Phaser.VERSION === '3.19.0', 'Phaser VERSION is not 3.19.0');
-console.assert(PhaserDebugDrawPlugin, 'Missing PhaserDebugDrawPlugin');
+console.assert(Phaser, 'Phaser is missing');
+console.assert(Phaser.VERSION === '3.21.0', 'Phaser VERSION is not 3.21.0');
+console.assert(PhaserDebugDrawPlugin, 'PhaserDebugDrawPlugin is missing');
 
 var GREEN = 0x00ffff;
 var RED = 0xff0000;
