@@ -169,7 +169,9 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   drawPointer (pointer) {
     if (!pointer.active && !this.showInactivePointers) return;
 
-    const { worldX, worldY } = pointer;
+    const { x, y } = this.systems.cameras.main;
+    const worldX = pointer.worldX - x;
+    const worldY = pointer.worldY - y;
 
     this.graphic.lineStyle(this.lineWidth, this.getColorForPointer(pointer), this.alpha);
 
@@ -232,9 +234,5 @@ Object.assign(DebugDrawPlugin.prototype, {
   showRotation: true,
   showTilePosition: true
 });
-
-if (typeof window !== 'undefined') {
-  window.PhaserDebugDrawPlugin = DebugDrawPlugin;
-}
 
 export default DebugDrawPlugin;
