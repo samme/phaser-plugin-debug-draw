@@ -5,9 +5,8 @@ Phaser 3 Debug Draw Plugin
 
 It shows:
 
-- Display Object bounds and rotation, colored by interactive status
-- Bitmap Mask bounds and rotation
-- TileSprite texture origins
+- Game Objects (origin, bounds, rotation, input)
+- Bitmap Masks
 - Input pointers
 
 [Demo](https://codepen.io/samme/full/zMZyOM/)
@@ -24,6 +23,14 @@ new Phaser.Game({
   }
 });
 ```
+
+You can set some options on the plugin. Do
+
+```
+console.log(this.debugDraw);
+```
+
+from a scene to see its properties.
 
 Browser
 -------
