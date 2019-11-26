@@ -127,21 +127,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     if (obj.rotation && this.showRotation) {
       this.drawObjRotation(obj);
     }
-
-    if ((obj.tilePositionX || obj.tilePositionY) && this.showTilePosition) {
-      this.drawObjTilePosition(obj);
-    }
-  }
-
-  drawObjTilePosition (obj) {
-    let { tilePositionX, tilePositionY } = obj;
-
-    const x = obj.x - tilePositionX;
-    const y = obj.y - tilePositionY;
-
-    this.graphic
-      .lineBetween(x - 5, y - 5, x + 5, y + 5)
-      .lineBetween(x - 5, y + 5, x + 5, y - 5);
   }
 
   drawObjRotation (obj) {
@@ -231,8 +216,7 @@ Object.assign(DebugDrawPlugin.prototype, {
   showInactivePointers: false,
   showInput: true,
   showPointers: true,
-  showRotation: true,
-  showTilePosition: true
+  showRotation: true
 });
 
 export default DebugDrawPlugin;
