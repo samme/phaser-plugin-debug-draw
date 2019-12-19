@@ -18,19 +18,38 @@ Use
 new Phaser.Game({
   plugins: {
     scene: [
-      { key: 'DebugDrawPlugin', plugin: PhaserDebugDrawPlugin, mapping: 'debugDraw' }
+      {
+        key: 'DebugDrawPlugin',
+        plugin: PhaserDebugDrawPlugin,
+        mapping: 'debugDraw'
+      }
     ]
   }
 });
 ```
 
-You can set some options on the plugin. Do
+Options
+-------
 
-```
-console.log(this.debugDraw);
-```
+You can set these properties of the scene's plugin instance (e.g., `this.debugDraw`).
 
-from a scene to see its properties.
+    {
+      alpha: 1,
+      color: 0x00ddff,
+      inputColor: 0xffcc00,
+      inputDisabledColor: 0x886600,
+      lineWidth: 1,
+      maskColor: 0xff0022,
+      pointerColor: 0xffcc00,
+      pointerDownColor: 0x00ff22,
+      pointerInactiveColor: 0x888888,
+      showInactivePointers: false,
+      showInput: true,
+      showPointers: true,
+      showRotation: true
+    }
+
+[1]: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.GetBounds.html#getBounds
 
 Browser
 -------
@@ -38,6 +57,8 @@ Browser
 ```html
 <script src='path/to/phaser-plugin-debug-draw.umd.js'></script>
 ```
+
+Then use the global `PhaserDebugDrawPlugin`.
 
 ES Module
 ---------
