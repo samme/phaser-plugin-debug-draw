@@ -4,6 +4,26 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var Phaser = _interopDefault(require('phaser'));
 
+var colors = {
+  aqua: 0x7fdbff,
+  black: 0x111111,
+  blue: 0x0074d9,
+  fuchsia: 0xf012be,
+  gray: 0xaaaaaa,
+  green: 0x2ecc40,
+  lime: 0x01ff70,
+  maroon: 0x85144b,
+  navy: 0x001f3f,
+  olive: 0x3d9970,
+  orange: 0xff851b,
+  purple: 0xb10dc9,
+  red: 0xff4136,
+  silver: 0xdddddd,
+  teal: 0x39cccc,
+  white: 0xffffff,
+  yellow: 0xffdc00
+};
+
 var cos = Math.cos;
 var max = Math.max;
 var sin = Math.sin;
@@ -43,6 +63,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
 
   DebugDrawPlugin.prototype.drawAll = function drawAll () {
     var ref = this.systems;
+    var cameras = ref.cameras;
     var displayList = ref.displayList;
 
     if (!displayList.length) { return; }
@@ -52,7 +73,8 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     var masks = [];
     var showInput = this.showInput && this.systems.input.isActive();
 
-    this.graphic.clear()
+    this.graphic
+      .clear()
       .fillStyle(this.color, this.alpha)
       .lineStyle(this.lineWidth, this.color, this.alpha);
 
@@ -73,6 +95,8 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     if (showInput && this.showPointers) {
       this.drawPointers(this.getPointers());
     }
+
+    this.drawCamera(cameras.main);
   };
 
   DebugDrawPlugin.prototype.processObj = function processObj (obj, disabledInputs, inputs, masks, showInput) {
@@ -186,6 +210,20 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     }
   };
 
+  DebugDrawPlugin.prototype.drawCamera = function drawCamera (camera) {
+    if (camera.useBounds) {
+      this.graphic
+        .lineStyle(this.lineWidth, this.cameraBoundsColor, this.alpha)
+        .strokeRectShape(camera._bounds);
+    }
+
+    if (camera.deadzone) {
+      this.graphic
+        .lineStyle(this.lineWidth, this.cameraDeadzoneColor, this.alpha)
+        .strokeRectShape(camera.deadzone);
+    }
+  };
+
   DebugDrawPlugin.prototype.getColorForPointer = function getColorForPointer (pointer) {
     switch (true) {
       case (pointer.isDown): return this.pointerDownColor;
@@ -225,14 +263,16 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
 
 Object.assign(DebugDrawPlugin.prototype, {
   alpha: 1,
-  color: 0x00ddff,
-  inputColor: 0xffcc00,
-  inputDisabledColor: 0x886600,
+  color: colors.blue,
+  inputColor: colors.yellow,
+  inputDisabledColor: colors.gray,
+  cameraBoundsColor: colors.fuchsia,
+  cameraDeadzoneColor: colors.orange,
   lineWidth: 1,
-  maskColor: 0xff0022,
-  pointerColor: 0xffcc00,
-  pointerDownColor: 0x00ff22,
-  pointerInactiveColor: 0x888888,
+  maskColor: colors.red,
+  pointerColor: colors.yellow,
+  pointerDownColor: colors.lime,
+  pointerInactiveColor: colors.gray,
   showInactivePointers: false,
   showInput: true,
   showPointers: true,
