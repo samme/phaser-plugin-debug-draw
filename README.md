@@ -8,6 +8,7 @@ It shows:
 - Game Objects (origin, bounds, rotation, input)
 - Bitmap Masks
 - Input pointers
+- Camera bounds and deadzone
 
 [Demo](https://codepen.io/samme/full/zMZyOM/)
 
@@ -35,21 +36,21 @@ You can set these properties of the scene's plugin instance (e.g., `this.debugDr
 
     {
       alpha: 1,
-      color: 0x00ddff,
-      inputColor: 0xffcc00,
-      inputDisabledColor: 0x886600,
+      color: colors.blue,
+      inputColor: colors.yellow,
+      inputDisabledColor: colors.gray,
+      cameraBoundsColor: colors.fuchsia,
+      cameraDeadzoneColor: colors.orange,
       lineWidth: 1,
-      maskColor: 0xff0022,
-      pointerColor: 0xffcc00,
-      pointerDownColor: 0x00ff22,
-      pointerInactiveColor: 0x888888,
+      maskColor: colors.red,
+      pointerColor: colors.yellow,
+      pointerDownColor: colors.lime,
+      pointerInactiveColor: colors.gray,
       showInactivePointers: false,
       showInput: true,
       showPointers: true,
       showRotation: true
     }
-
-[1]: https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.GetBounds.html#getBounds
 
 Browser
 -------
