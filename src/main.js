@@ -224,11 +224,11 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
 Object.assign(DebugDrawPlugin.prototype, {
   alpha: 1,
+  cameraBoundsColor: colors.fuchsia,
+  cameraDeadzoneColor: colors.orange,
   color: colors.blue,
   inputColor: colors.yellow,
   inputDisabledColor: colors.gray,
-  cameraBoundsColor: colors.fuchsia,
-  cameraDeadzoneColor: colors.orange,
   lineWidth: 1,
   maskColor: colors.red,
   pointerColor: colors.yellow,
