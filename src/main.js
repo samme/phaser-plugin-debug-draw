@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 
+import colors from './colors';
+
 const { cos, max, sin } = Math;
 
 const POINTER_RADIUS = 20;
@@ -205,14 +207,14 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
 Object.assign(DebugDrawPlugin.prototype, {
   alpha: 1,
-  color: 0x00ddff,
-  inputColor: 0xffcc00,
-  inputDisabledColor: 0x886600,
+  color: colors.blue,
+  inputColor: colors.yellow,
+  inputDisabledColor: colors.gray,
   lineWidth: 1,
-  maskColor: 0xff0022,
-  pointerColor: 0xffcc00,
-  pointerDownColor: 0x00ff22,
-  pointerInactiveColor: 0x888888,
+  maskColor: colors.red,
+  pointerColor: colors.yellow,
+  pointerDownColor: colors.lime,
+  pointerInactiveColor: colors.gray,
   showInactivePointers: false,
   showInput: true,
   showPointers: true,
