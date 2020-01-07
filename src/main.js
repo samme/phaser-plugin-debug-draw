@@ -30,7 +30,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   drawAll () {
-    const { displayList } = this.systems;
+    const { cameras, displayList } = this.systems;
 
     if (!displayList.length) return;
 
@@ -39,7 +39,8 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     const masks = [];
     const showInput = this.showInput && this.systems.input.isActive();
 
-    this.graphic.clear()
+    this.graphic
+      .clear()
       .fillStyle(this.color, this.alpha)
       .lineStyle(this.lineWidth, this.color, this.alpha);
 
@@ -60,6 +61,8 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     if (showInput && this.showPointers) {
       this.drawPointers(this.getPointers());
     }
+
+    this.drawCamera(cameras.main);
   }
 
   processObj (obj, disabledInputs, inputs, masks, showInput) {
@@ -171,6 +174,20 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     }
   }
 
+  drawCamera (camera) {
+    if (camera.useBounds) {
+      this.graphic
+        .lineStyle(this.lineWidth, this.cameraBoundsColor, this.alpha)
+        .strokeRectShape(camera._bounds);
+    }
+
+    if (camera.deadzone) {
+      this.graphic
+        .lineStyle(this.lineWidth, this.cameraDeadzoneColor, this.alpha)
+        .strokeRectShape(camera.deadzone);
+    }
+  }
+
   getColorForPointer (pointer) {
     switch (true) {
       case (pointer.isDown): return this.pointerDownColor;
@@ -210,6 +227,8 @@ Object.assign(DebugDrawPlugin.prototype, {
   color: colors.blue,
   inputColor: colors.yellow,
   inputDisabledColor: colors.gray,
+  cameraBoundsColor: 0xff8800,
+  cameraDeadzoneColor: 0x88ff00,
   lineWidth: 1,
   maskColor: colors.red,
   pointerColor: colors.yellow,
