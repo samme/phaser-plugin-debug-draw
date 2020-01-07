@@ -1,3 +1,10 @@
+4.1.0 / 2020-01-07
+------------------
+
+- Added drawing of camera bounds.
+- Added drawing of camera deadzone.
+- Changed the default colors slightly.
+
 4.0.0 / 2019-11-26
 ------------------
 
@@ -39,7 +46,7 @@
 3.0.0 / 2019-09-24
 ------------------
 
-- Changed the 'main' file. There are now 3 package builds for 'browser' (UMD), 'main' (CommonJS), and 'module' (ES6). 
+- Changed the 'main' file. There are now 3 package builds for 'browser' (UMD), 'main' (CommonJS), and 'module' (ES6).
 
 2.1.0 / 2019-09-24
 ------------------
