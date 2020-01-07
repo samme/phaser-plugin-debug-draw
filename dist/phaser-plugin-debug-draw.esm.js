@@ -259,11 +259,11 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
 
 Object.assign(DebugDrawPlugin.prototype, {
   alpha: 1,
-  color: colors.blue,
-  inputColor: colors.yellow,
-  inputDisabledColor: colors.gray,
   cameraBoundsColor: colors.fuchsia,
   cameraDeadzoneColor: colors.orange,
+  color: colors.aqua,
+  inputColor: colors.yellow,
+  inputDisabledColor: colors.gray,
   lineWidth: 1,
   maskColor: colors.red,
   pointerColor: colors.yellow,
