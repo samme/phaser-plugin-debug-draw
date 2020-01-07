@@ -1,3 +1,8 @@
+4.2.0 / 2020-01-07
+------------------
+
+- Changed the default `color` value, now light blue again.
+
 4.1.0 / 2020-01-07
 ------------------
 
