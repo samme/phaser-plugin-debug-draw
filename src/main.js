@@ -11,7 +11,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.systems.events
       .on('start', this.sceneStart, this)
       .on('create', this.bringToTop, this)
-      .on('render', this.sceneRender, this)
+      .on('postupdate', this.scenePostUpdate, this)
       .on('shutdown', this.sceneShutdown, this)
       .once('destroy', this.sceneDestroy, this);
   }
@@ -25,7 +25,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.graphic = null;
   }
 
-  sceneRender () {
+  scenePostUpdate () {
     this.drawAll();
   }
 
@@ -85,7 +85,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.systems.events
       .off('start', this.sceneStart, this)
       .off('create', this.bringToTop, this)
-      .off('render', this.sceneRender, this)
+      .off('postupdate', this.scenePostUpdate, this)
       .off('shutdown', this.sceneShutdown, this)
       .off('destroy', this.sceneDestroy, this);
 
