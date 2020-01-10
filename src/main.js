@@ -6,6 +6,8 @@ const { cos, max, sin } = Math;
 
 const POINTER_RADIUS = 20;
 
+const FOLLOW_RADIUS = 20;
+
 class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   boot () {
     this.systems.events
@@ -186,6 +188,16 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
         .lineStyle(this.lineWidth, this.cameraDeadzoneColor, this.alpha)
         .strokeRectShape(camera.deadzone);
     }
+
+    if (camera._follow) {
+      const x = camera._follow.x - camera.followOffset.x;
+      const y = camera._follow.y - camera.followOffset.y;
+
+      this.graphic
+        .lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha)
+        .lineBetween(x - FOLLOW_RADIUS, y, x + FOLLOW_RADIUS, y)
+        .lineBetween(x, y - FOLLOW_RADIUS, x, y + FOLLOW_RADIUS);
+    }
   }
 
   getColorForPointer (pointer) {
@@ -226,6 +238,7 @@ Object.assign(DebugDrawPlugin.prototype, {
   alpha: 1,
   cameraBoundsColor: colors.fuchsia,
   cameraDeadzoneColor: colors.orange,
+  cameraFollowColor: colors.orange,
   color: colors.aqua,
   inputColor: colors.yellow,
   inputDisabledColor: colors.gray,
