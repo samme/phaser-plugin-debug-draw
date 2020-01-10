@@ -5,23 +5,23 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var Phaser = _interopDefault(require('phaser'));
 
 var colors = {
-  aqua: 0x7fdbff,
-  black: 0x111111,
-  blue: 0x0074d9,
-  fuchsia: 0xf012be,
-  gray: 0xaaaaaa,
-  green: 0x2ecc40,
-  lime: 0x01ff70,
-  maroon: 0x85144b,
-  navy: 0x001f3f,
-  olive: 0x3d9970,
-  orange: 0xff851b,
-  purple: 0xb10dc9,
-  red: 0xff4136,
-  silver: 0xdddddd,
-  teal: 0x39cccc,
+  aqua: 0x00d9f7,
+  black: 0x000000,
+  blue: 0x0050d4,
+  fuchsia: 0xff00c3,
+  gray: 0x333333,
+  green: 0x00d942,
+  lime: 0xb4d900,
+  maroon: 0x790009,
+  navy: 0x002b75,
+  olive: 0x00b562,
+  orange: 0xeb7700,
+  purple: 0x8d00ff,
+  red: 0xeb0012,
+  silver: 0x777777,
+  teal: 0x00a6a6,
   white: 0xffffff,
-  yellow: 0xffdc00
+  yellow: 0xebcf00
 };
 
 var cos = Math.cos;
@@ -29,6 +29,8 @@ var max = Math.max;
 var sin = Math.sin;
 
 var POINTER_RADIUS = 20;
+
+var FOLLOW_RADIUS = 20;
 
 var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   function DebugDrawPlugin () {
@@ -43,7 +45,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     this.systems.events
       .on('start', this.sceneStart, this)
       .on('create', this.bringToTop, this)
-      .on('render', this.sceneRender, this)
+      .on('postupdate', this.scenePostUpdate, this)
       .on('shutdown', this.sceneShutdown, this)
       .once('destroy', this.sceneDestroy, this);
   };
@@ -57,7 +59,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     this.graphic = null;
   };
 
-  DebugDrawPlugin.prototype.sceneRender = function sceneRender () {
+  DebugDrawPlugin.prototype.scenePostUpdate = function scenePostUpdate () {
     this.drawAll();
   };
 
@@ -119,7 +121,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     this.systems.events
       .off('start', this.sceneStart, this)
       .off('create', this.bringToTop, this)
-      .off('render', this.sceneRender, this)
+      .off('postupdate', this.scenePostUpdate, this)
       .off('shutdown', this.sceneShutdown, this)
       .off('destroy', this.sceneDestroy, this);
 
@@ -222,6 +224,16 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
         .lineStyle(this.lineWidth, this.cameraDeadzoneColor, this.alpha)
         .strokeRectShape(camera.deadzone);
     }
+
+    if (camera._follow) {
+      var x = camera._follow.x - camera.followOffset.x;
+      var y = camera._follow.y - camera.followOffset.y;
+
+      this.graphic
+        .lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha)
+        .lineBetween(x - FOLLOW_RADIUS, y, x + FOLLOW_RADIUS, y)
+        .lineBetween(x, y - FOLLOW_RADIUS, x, y + FOLLOW_RADIUS);
+    }
   };
 
   DebugDrawPlugin.prototype.getColorForPointer = function getColorForPointer (pointer) {
@@ -265,14 +277,15 @@ Object.assign(DebugDrawPlugin.prototype, {
   alpha: 1,
   cameraBoundsColor: colors.fuchsia,
   cameraDeadzoneColor: colors.orange,
+  cameraFollowColor: colors.orange,
   color: colors.aqua,
   inputColor: colors.yellow,
-  inputDisabledColor: colors.gray,
+  inputDisabledColor: colors.silver,
   lineWidth: 1,
   maskColor: colors.red,
   pointerColor: colors.yellow,
   pointerDownColor: colors.lime,
-  pointerInactiveColor: colors.gray,
+  pointerInactiveColor: colors.silver,
   showInactivePointers: false,
   showInput: true,
   showPointers: true,
