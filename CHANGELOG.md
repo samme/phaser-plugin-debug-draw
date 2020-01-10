@@ -1,3 +1,10 @@
+4.3.0 / 2020-01-09
+------------------
+
+- Added drawing the camera follow target.
+- Changed the default colors. More saturated.
+- Switched to the scene's `postupdate` event, from `render`.
+
 4.2.0 / 2020-01-07
 ------------------
 

@@ -41,6 +41,7 @@ You can set these properties of the scene's plugin instance (e.g., `this.debugDr
       inputDisabledColor: colors.gray,
       cameraBoundsColor: colors.fuchsia,
       cameraDeadzoneColor: colors.orange,
+      cameraFollowColor: color.orange,
       lineWidth: 1,
       maskColor: colors.red,
       pointerColor: colors.yellow,
