@@ -39,6 +39,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     const disabledInputs = [];
     const inputs = [];
     const masks = [];
+    const vertices = [];
     const showInput = this.showInput && this.systems.input.isActive();
 
     this.graphic
@@ -46,7 +47,11 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       .fillStyle(this.color, this.alpha)
       .lineStyle(this.lineWidth, this.color, this.alpha);
 
-    displayList.each(this.processObj, this, disabledInputs, inputs, masks, showInput);
+    displayList.each(this.processObj, this, disabledInputs, inputs, masks, vertices, showInput);
+
+    if (vertices.length) {
+      this.drawVertices(vertices);
+    }
 
     if (disabledInputs.length) {
       this.drawDisabledInputs(disabledInputs);
@@ -67,7 +72,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.drawCamera(cameras.main);
   }
 
-  processObj (obj, disabledInputs, inputs, masks, showInput) {
+  processObj (obj, disabledInputs, inputs, masks, vertices, showInput) {
     if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputs[inputs.length] = obj;
@@ -80,6 +85,10 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     if (obj.mask && masks.indexOf(obj) === -1) {
       masks[masks.length] = obj;
+    }
+
+    if (obj.vertices) {
+      vertices[vertices.length] = obj;
     }
   }
 
@@ -119,6 +128,13 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     objs.forEach(this.drawObjMask, this);
   }
 
+  drawVertices (objs) {
+    this.graphic
+      .lineStyle(this.lineWidth, this.verticesColor, this.alpha);
+
+    objs.forEach(this.drawObjVertices, this);
+  }
+
   drawObj (obj) {
     const width = obj.displayWidth || obj.width;
     const height = obj.displayHeight || obj.height;
@@ -152,6 +168,19 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
   drawObjMask (obj) {
     if (obj.mask.bitmapMask) this.drawObj(obj.mask.bitmapMask);
+  }
+
+  drawObjVertices (obj) {
+    const { x, y } = obj;
+    const v = obj.vertices;
+    const half = 0.5 * v.length;
+    const points = [];
+
+    for (let i = 0; i < half; i += 1) {
+      points[i] = { x: x + v[2 * i], y: y + v[2 * i + 1] };
+    }
+
+    this.graphic.strokePoints(points, true, true);
   }
 
   drawPointers (pointers) {
@@ -250,7 +279,8 @@ Object.assign(DebugDrawPlugin.prototype, {
   showInactivePointers: false,
   showInput: true,
   showPointers: true,
-  showRotation: true
+  showRotation: true,
+  verticesColor: colors.blue
 });
 
 export default DebugDrawPlugin;
