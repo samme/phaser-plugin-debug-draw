@@ -69,6 +69,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     var disabledInputs = [];
     var inputs = [];
     var masks = [];
+    var vertices = [];
     var showInput = this.showInput && this.systems.input.isActive();
 
     this.graphic
@@ -76,7 +77,11 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
       .fillStyle(this.color, this.alpha)
       .lineStyle(this.lineWidth, this.color, this.alpha);
 
-    displayList.each(this.processObj, this, disabledInputs, inputs, masks, showInput);
+    displayList.each(this.processObj, this, disabledInputs, inputs, masks, vertices, showInput);
+
+    if (vertices.length) {
+      this.drawVertices(vertices);
+    }
 
     if (disabledInputs.length) {
       this.drawDisabledInputs(disabledInputs);
@@ -97,7 +102,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     this.drawCamera(cameras.main);
   };
 
-  DebugDrawPlugin.prototype.processObj = function processObj (obj, disabledInputs, inputs, masks, showInput) {
+  DebugDrawPlugin.prototype.processObj = function processObj (obj, disabledInputs, inputs, masks, vertices, showInput) {
     if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputs[inputs.length] = obj;
@@ -110,6 +115,10 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
 
     if (obj.mask && masks.indexOf(obj) === -1) {
       masks[masks.length] = obj;
+    }
+
+    if (obj.vertices) {
+      vertices[vertices.length] = obj;
     }
   };
 
@@ -149,6 +158,13 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     objs.forEach(this.drawObjMask, this);
   };
 
+  DebugDrawPlugin.prototype.drawVertices = function drawVertices (objs) {
+    this.graphic
+      .lineStyle(this.lineWidth, this.verticesColor, this.alpha);
+
+    objs.forEach(this.drawObjVertices, this);
+  };
+
   DebugDrawPlugin.prototype.drawObj = function drawObj (obj) {
     var width = obj.displayWidth || obj.width;
     var height = obj.displayHeight || obj.height;
@@ -182,6 +198,20 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
 
   DebugDrawPlugin.prototype.drawObjMask = function drawObjMask (obj) {
     if (obj.mask.bitmapMask) { this.drawObj(obj.mask.bitmapMask); }
+  };
+
+  DebugDrawPlugin.prototype.drawObjVertices = function drawObjVertices (obj) {
+    var x = obj.x;
+    var y = obj.y;
+    var v = obj.vertices;
+    var half = 0.5 * v.length;
+    var points = [];
+
+    for (var i = 0; i < half; i += 1) {
+      points[i] = { x: x + v[2 * i], y: y + v[2 * i + 1] };
+    }
+
+    this.graphic.strokePoints(points, true, true);
   };
 
   DebugDrawPlugin.prototype.drawPointers = function drawPointers (pointers) {
@@ -280,12 +310,13 @@ Object.assign(DebugDrawPlugin.prototype, {
   lineWidth: 1,
   maskColor: colors.red,
   pointerColor: colors.yellow,
-  pointerDownColor: colors.lime,
+  pointerDownColor: colors.green,
   pointerInactiveColor: colors.silver,
   showInactivePointers: false,
   showInput: true,
   showPointers: true,
-  showRotation: true
+  showRotation: true,
+  verticesColor: colors.blue
 });
 
 export default DebugDrawPlugin;
