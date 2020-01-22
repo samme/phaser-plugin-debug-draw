@@ -8,9 +8,9 @@ It shows:
 - Game Objects (origin, bounds, rotation, input)
 - Bitmap Masks
 - Input pointers
-- Camera bounds and deadzone
+- Camera bounds, deadzone, and follow target
 
-[Demo](https://codepen.io/samme/full/zMZyOM/)
+[Demo](https://codepen.io/samme/full/zMZyOM/) | [Screenshots](https://phaser.discourse.group/t/debug-draw-plugin-phaser-3/4480)
 
 Use
 ---
@@ -36,17 +36,17 @@ You can set these properties of the scene's plugin instance (e.g., `this.debugDr
 
     {
       alpha: 1,
-      color: colors.blue,
-      inputColor: colors.yellow,
-      inputDisabledColor: colors.gray,
       cameraBoundsColor: colors.fuchsia,
       cameraDeadzoneColor: colors.orange,
-      cameraFollowColor: color.orange,
+      cameraFollowColor: colors.orange,
+      color: colors.aqua,
+      inputColor: colors.yellow,
+      inputDisabledColor: colors.silver,
       lineWidth: 1,
       maskColor: colors.red,
       pointerColor: colors.yellow,
       pointerDownColor: colors.lime,
-      pointerInactiveColor: colors.gray,
+      pointerInactiveColor: colors.silver,
       showInactivePointers: false,
       showInput: true,
       showPointers: true,
