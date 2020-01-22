@@ -9,6 +9,7 @@ It shows:
 - Bitmap Masks
 - Input pointers
 - Camera bounds, deadzone, and follow target
+- Mesh and Rope vertices
 
 [Demo](https://codepen.io/samme/full/zMZyOM/) | [Screenshots](https://phaser.discourse.group/t/debug-draw-plugin-phaser-3/4480)
 
@@ -45,12 +46,13 @@ You can set these properties of the scene's plugin instance (e.g., `this.debugDr
       lineWidth: 1,
       maskColor: colors.red,
       pointerColor: colors.yellow,
-      pointerDownColor: colors.lime,
+      pointerDownColor: colors.green,
       pointerInactiveColor: colors.silver,
       showInactivePointers: false,
       showInput: true,
       showPointers: true,
-      showRotation: true
+      showRotation: true,
+      verticesColor: colors.blue
     }
 
 Browser

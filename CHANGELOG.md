@@ -1,3 +1,9 @@
+4.4.0 / 2020-01-22
+------------------
+
+- Added drawing object vertices.
+- Changed default `pointerDownColor`.
+
 4.3.0 / 2020-01-09
 ------------------
 
