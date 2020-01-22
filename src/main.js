@@ -274,7 +274,7 @@ Object.assign(DebugDrawPlugin.prototype, {
   lineWidth: 1,
   maskColor: colors.red,
   pointerColor: colors.yellow,
-  pointerDownColor: colors.lime,
+  pointerDownColor: colors.green,
   pointerInactiveColor: colors.silver,
   showInactivePointers: false,
   showInput: true,
