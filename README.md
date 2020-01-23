@@ -20,11 +20,7 @@ Use
 new Phaser.Game({
   plugins: {
     scene: [
-      {
-        key: 'DebugDrawPlugin',
-        plugin: PhaserDebugDrawPlugin,
-        mapping: 'debugDraw'
-      }
+      { key: 'DebugDrawPlugin', plugin: PhaserDebugDrawPlugin, mapping: 'debugDraw' }
     ]
   }
 });
