@@ -155,11 +155,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   drawObjRotation (obj) {
     const length = 0.5 * max((obj.displayWidth || obj.width), (obj.displayHeight || obj.height));
 
-    this.graphic.lineBetween(
-      obj.x,
-      obj.y,
-      obj.x + cos(obj.rotation) * length,
-      obj.y + sin(obj.rotation) * length);
+    this.line(obj.x, obj.y, cos(obj.rotation) * length, sin(obj.rotation) * length);
   }
 
   drawObjInput (obj) {
@@ -197,20 +193,14 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.graphic.lineStyle(this.lineWidth, this.getColorForPointer(pointer), this.alpha);
 
     if (pointer.locked) {
-      this.graphic
-        .strokeRect(worldX - POINTER_RADIUS, worldY - POINTER_RADIUS, 2 * POINTER_RADIUS, 2 * POINTER_RADIUS)
-        .lineBetween(worldX, worldY, worldX + pointer.movementX, worldY + pointer.movementY);
+      this.graphic.strokeRect(worldX - POINTER_RADIUS, worldY - POINTER_RADIUS, 2 * POINTER_RADIUS, 2 * POINTER_RADIUS);
+      this.line(worldX, worldY, pointer.movementX, pointer.movementY);
     } else {
       this.graphic.strokeCircle(worldX, worldY, POINTER_RADIUS);
     }
 
     if (pointer.isDown) {
-      this.graphic.lineBetween(
-        worldX,
-        worldY,
-        worldX + (pointer.downX - pointer.x) / zoom,
-        worldY + (pointer.downY - pointer.y) / zoom
-      );
+      this.line(worldX, worldY, (pointer.downX - pointer.x) / zoom, (pointer.downY - pointer.y) / zoom);
     }
   }
 
@@ -231,10 +221,8 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       const x = camera._follow.x - camera.followOffset.x;
       const y = camera._follow.y - camera.followOffset.y;
 
-      this.graphic
-        .lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha)
-        .lineBetween(x - FOLLOW_RADIUS, y, x + FOLLOW_RADIUS, y)
-        .lineBetween(x, y - FOLLOW_RADIUS, x, y + FOLLOW_RADIUS);
+      this.graphic.lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha);
+      this.cross(x, y, FOLLOW_RADIUS);
     }
   }
 
@@ -269,6 +257,15 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
   toggle () {
     this.graphic.setVisible(!this.graphic.visible);
+  }
+
+  line (x, y, dx, dy) {
+    this.graphic.lineBetween(x, y, x + dx, y + dy);
+  }
+
+  cross (x, y, diameter) {
+    this.line(x - diameter, y, diameter, 0);
+    this.line(x, y - diameter, 0, diameter);
   }
 }
 
