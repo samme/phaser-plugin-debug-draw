@@ -47,7 +47,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       .fillStyle(this.color, this.alpha)
       .lineStyle(this.lineWidth, this.color, this.alpha);
 
-    displayList.each(this.processObj, this, disabledInputs, inputs, masks, vertices, showInput);
+    displayList.each(this.processObj, this, disabledInputs, inputs, masks, vertices, showInput, this.showVertices);
 
     if (vertices.length) {
       this.drawVertices(vertices);
@@ -72,7 +72,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.drawCamera(cameras.main);
   }
 
-  processObj (obj, disabledInputs, inputs, masks, vertices, showInput) {
+  processObj (obj, disabledInputs, inputs, masks, vertices, showInput, showVertices) {
     if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputs[inputs.length] = obj;
@@ -87,7 +87,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       masks[masks.length] = obj;
     }
 
-    if (obj.vertices) {
+    if (obj.vertices && showVertices) {
       vertices[vertices.length] = obj;
     }
   }
@@ -167,16 +167,16 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   drawObjVertices (obj) {
-    const { x, y } = obj;
+    const { x, y, scaleX, scaleY } = obj;
     const v = obj.vertices;
     const half = 0.5 * v.length;
     const points = [];
 
     for (let i = 0; i < half; i += 1) {
-      points[i] = { x: x + v[2 * i], y: y + v[2 * i + 1] };
+      points[i] = { x: x + scaleX * v[2 * i], y: y + scaleY * v[2 * i + 1] };
     }
 
-    this.graphic.strokePoints(points, true, true);
+    this.graphic.strokePoints(points);
   }
 
   drawPointers (pointers) {
@@ -286,6 +286,7 @@ Object.assign(DebugDrawPlugin.prototype, {
   showInput: true,
   showPointers: true,
   showRotation: true,
+  showVertices: true,
   verticesColor: colors.blue
 });
 
