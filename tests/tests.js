@@ -9,7 +9,7 @@ var IncX = Phaser.Actions.IncX;
 var WrapInRectangle = Phaser.Actions.WrapInRectangle;
 var images = ['blue-planet', 'elephant', 'mask', 'nebula', 'starfield']
   .map(function (name) { return { key: name }; });
-var sprites, maskImage, nebula, starfield, planet, controls, bounds;
+var sprites, maskImage, nebula, starfield, planet, controls, bounds, quad;
 
 function dragStart (pointer, gameObject) {
   gameObject.setTint(GREEN, GREEN, RED, RED);
@@ -42,7 +42,7 @@ var scene = {
 
     var group = this.add.group({
       key: 'elephant',
-      frameQuantity: 6,
+      frameQuantity: 5,
       setXY: { x: 128, y: 64, stepX: 128, stepY: 128 },
       hitArea: new Geom.Rectangle(-16, 16, 128, 64),
       hitAreaCallback: Geom.Rectangle.Contains
@@ -54,11 +54,11 @@ var scene = {
       .setName('inertElephant')
       .disableInteractive();
 
-    sprites[4]
+    sprites[1]
       .setName('invisibleElephant')
       .setVisible(false);
 
-    sprites[5]
+    sprites[2]
       .setName('maskedElephant')
       .setMask(mask);
 
@@ -78,6 +78,11 @@ var scene = {
       loop: -1,
       yoyo: true
     });
+
+    quad = this.add.quad(128, 640, 'elephant')
+      .setName('quadraticElephant');
+
+    sprites.push(quad);
 
     this.add.text(0, 0, 'Drag the elephants around');
 
@@ -145,6 +150,11 @@ var scene = {
 
     IncX(sprites, -1);
     WrapInRectangle(sprites, bounds, 50);
+
+    quad.topLeftY = quad.y - 40 + 10 * Math.sin(0.02 * quad.x);
+    quad.bottomLeftY = quad.y + 40 + 10 * Math.sin(0.04 * quad.x);
+    quad.topRightY = quad.y - 40 + 10 * Math.sin(0.03 * quad.x);
+    quad.bottomRightY = quad.y + 40 + 10 * Math.sin(0.05 * quad.x);
 
     controls.update(delta);
   }
