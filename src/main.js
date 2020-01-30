@@ -16,6 +16,10 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       .on('postupdate', this.scenePostUpdate, this)
       .on('shutdown', this.sceneShutdown, this)
       .once('destroy', this.sceneDestroy, this);
+
+    if (this.systems.settings.isBooted) {
+      this.sceneStart();
+    }
   }
 
   sceneStart () {
