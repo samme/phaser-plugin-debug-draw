@@ -44,6 +44,10 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
       .on('postupdate', this.scenePostUpdate, this)
       .on('shutdown', this.sceneShutdown, this)
       .once('destroy', this.sceneDestroy, this);
+
+    if (this.systems.settings.isBooted) {
+      this.sceneStart();
+    }
   };
 
   DebugDrawPlugin.prototype.sceneStart = function sceneStart () {
@@ -70,6 +74,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     var inputs = [];
     var masks = [];
     var vertices = [];
+    var points = [];
     var showInput = this.showInput && this.systems.input.isActive();
 
     this.graphic
@@ -77,10 +82,14 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
       .fillStyle(this.color, this.alpha)
       .lineStyle(this.lineWidth, this.color, this.alpha);
 
-    displayList.each(this.processObj, this, disabledInputs, inputs, masks, vertices, showInput);
+    displayList.each(this.processObj, this, disabledInputs, inputs, masks, vertices, points, showInput, this.showVertices, this.showPoints);
 
     if (vertices.length) {
       this.drawVertices(vertices);
+    }
+
+    if (points.length) {
+      this.drawPoints(points);
     }
 
     if (disabledInputs.length) {
@@ -102,7 +111,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     this.drawCamera(cameras.main);
   };
 
-  DebugDrawPlugin.prototype.processObj = function processObj (obj, disabledInputs, inputs, masks, vertices, showInput) {
+  DebugDrawPlugin.prototype.processObj = function processObj (obj, disabledInputs, inputs, masks, vertices, points, showInput, showVertices, showPoints) {
     if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputs[inputs.length] = obj;
@@ -117,8 +126,12 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
       masks[masks.length] = obj;
     }
 
-    if (obj.vertices) {
+    if (obj.vertices && showVertices) {
       vertices[vertices.length] = obj;
+    }
+
+    if (obj.points && showPoints) {
+      points[points.length] = obj;
     }
   };
 
@@ -165,6 +178,13 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     objs.forEach(this.drawObjVertices, this);
   };
 
+  DebugDrawPlugin.prototype.drawPoints = function drawPoints (objs) {
+    this.graphic
+      .lineStyle(this.lineWidth, this.pointsColor, this.alpha);
+
+    objs.forEach(this.drawObjPoints, this);
+  };
+
   DebugDrawPlugin.prototype.drawObj = function drawObj (obj) {
     var width = obj.displayWidth || obj.width;
     var height = obj.displayHeight || obj.height;
@@ -185,11 +205,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   DebugDrawPlugin.prototype.drawObjRotation = function drawObjRotation (obj) {
     var length = 0.5 * max((obj.displayWidth || obj.width), (obj.displayHeight || obj.height));
 
-    this.graphic.lineBetween(
-      obj.x,
-      obj.y,
-      obj.x + cos(obj.rotation) * length,
-      obj.y + sin(obj.rotation) * length);
+    this.line(obj.x, obj.y, cos(obj.rotation) * length, sin(obj.rotation) * length);
   };
 
   DebugDrawPlugin.prototype.drawObjInput = function drawObjInput (obj) {
@@ -203,15 +219,26 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   DebugDrawPlugin.prototype.drawObjVertices = function drawObjVertices (obj) {
     var x = obj.x;
     var y = obj.y;
+    var scaleX = obj.scaleX;
+    var scaleY = obj.scaleY;
     var v = obj.vertices;
     var half = 0.5 * v.length;
     var points = [];
 
     for (var i = 0; i < half; i += 1) {
-      points[i] = { x: x + v[2 * i], y: y + v[2 * i + 1] };
+      points[i] = { x: x + scaleX * v[2 * i], y: y + scaleY * v[2 * i + 1] };
     }
 
-    this.graphic.strokePoints(points, true, true);
+    this.graphic.strokePoints(points);
+  };
+
+  DebugDrawPlugin.prototype.drawObjPoints = function drawObjPoints (obj) {
+    var x = obj.x;
+    var y = obj.y;
+    var scaleX = obj.scaleX;
+    var scaleY = obj.scaleY;
+
+    this.graphic.strokePoints(obj.points.map(function (p) { return ({ x: x + scaleX * p.x, y: y + scaleY * p.y }); }));
   };
 
   DebugDrawPlugin.prototype.drawPointers = function drawPointers (pointers) {
@@ -224,17 +251,21 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     var ref = this.systems.cameras.main;
     var x = ref.x;
     var y = ref.y;
+    var zoom = ref.zoom;
     var worldX = pointer.worldX - x;
     var worldY = pointer.worldY - y;
 
     this.graphic.lineStyle(this.lineWidth, this.getColorForPointer(pointer), this.alpha);
 
     if (pointer.locked) {
-      this.graphic
-        .strokeRect(worldX - POINTER_RADIUS, worldY - POINTER_RADIUS, 2 * POINTER_RADIUS, 2 * POINTER_RADIUS)
-        .lineBetween(worldX, worldY, worldX + pointer.movementX, worldY + pointer.movementY);
+      this.graphic.strokeRect(worldX - POINTER_RADIUS, worldY - POINTER_RADIUS, 2 * POINTER_RADIUS, 2 * POINTER_RADIUS);
+      this.line(worldX, worldY, pointer.movementX, pointer.movementY);
     } else {
       this.graphic.strokeCircle(worldX, worldY, POINTER_RADIUS);
+    }
+
+    if (pointer.isDown) {
+      this.line(worldX, worldY, (pointer.downX - pointer.x) / zoom, (pointer.downY - pointer.y) / zoom);
     }
   };
 
@@ -255,10 +286,8 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
       var x = camera._follow.x - camera.followOffset.x;
       var y = camera._follow.y - camera.followOffset.y;
 
-      this.graphic
-        .lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha)
-        .lineBetween(x - FOLLOW_RADIUS, y, x + FOLLOW_RADIUS, y)
-        .lineBetween(x, y - FOLLOW_RADIUS, x, y + FOLLOW_RADIUS);
+      this.graphic.lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha);
+      this.cross(x, y, FOLLOW_RADIUS);
     }
   };
 
@@ -296,6 +325,15 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     this.graphic.setVisible(!this.graphic.visible);
   };
 
+  DebugDrawPlugin.prototype.line = function line (x, y, dx, dy) {
+    this.graphic.lineBetween(x, y, x + dx, y + dy);
+  };
+
+  DebugDrawPlugin.prototype.cross = function cross (x, y, diameter) {
+    this.line(x - diameter, y, diameter, 0);
+    this.line(x, y - diameter, 0, diameter);
+  };
+
   return DebugDrawPlugin;
 }(Phaser.Plugins.ScenePlugin));
 
@@ -312,10 +350,13 @@ Object.assign(DebugDrawPlugin.prototype, {
   pointerColor: colors.yellow,
   pointerDownColor: colors.green,
   pointerInactiveColor: colors.silver,
+  pointsColor: colors.olive,
   showInactivePointers: false,
   showInput: true,
   showPointers: true,
+  showPoints: true,
   showRotation: true,
+  showVertices: true,
   verticesColor: colors.blue
 });
 
