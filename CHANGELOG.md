@@ -1,3 +1,11 @@
+4.5.0 / 2020-01-30
+------------------
+
+- Added: draws object `points` (e.g., Rope).
+- Added: draws a vector for dragged input pointer. 
+- Changed: object vertices are scaled.
+- Fixed: start by `load.scenePlugin()`.
+
 4.4.0 / 2020-01-22
 ------------------
 

@@ -29,27 +29,7 @@ new Phaser.Game({
 Options
 -------
 
-You can set these properties of the scene's plugin instance (e.g., `this.debugDraw`).
-
-    {
-      alpha: 1,
-      cameraBoundsColor: colors.fuchsia,
-      cameraDeadzoneColor: colors.orange,
-      cameraFollowColor: colors.orange,
-      color: colors.aqua,
-      inputColor: colors.yellow,
-      inputDisabledColor: colors.silver,
-      lineWidth: 1,
-      maskColor: colors.red,
-      pointerColor: colors.yellow,
-      pointerDownColor: colors.green,
-      pointerInactiveColor: colors.silver,
-      showInactivePointers: false,
-      showInput: true,
-      showPointers: true,
-      showRotation: true,
-      verticesColor: colors.blue
-    }
+See [source](src/main.js) or `console.log(this.debugDraw)`.
 
 Browser
 -------
@@ -72,4 +52,39 @@ CommonJS Module
 
 ```javascript
 var DebugDrawPlugin = require('phaser-plugin-debug-draw');
+```
+
+Load on Demand
+--------------
+
+```javascript
+// From scene `preload()`
+this.load
+  .setBaseURL()
+  .setPath()
+  .setPrefix()
+  .scenePlugin(
+    'PhaserDebugDrawPlugin',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@4.5.0',
+    'debugDraw',
+    'debugDraw'
+  );
+```
+
+Load from Console
+-----------------
+
+```javascript
+game.scene
+  .getScenes(true)[0]
+  .load.setBaseURL()
+  .setPath()
+  .setPrefix()
+  .scenePlugin(
+    'PhaserDebugDrawPlugin',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@4.5.0',
+    'debugDraw',
+    'debugDraw'
+  )
+  .start();
 ```
