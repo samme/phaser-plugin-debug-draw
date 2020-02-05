@@ -65,7 +65,7 @@ this.load
   .setPrefix()
   .scenePlugin(
     'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@4.5.0',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@4.6.0',
     'debugDraw',
     'debugDraw'
   );
@@ -82,7 +82,7 @@ game.scene
   .setPrefix()
   .scenePlugin(
     'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@4.5.0',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@4.6.0',
     'debugDraw',
     'debugDraw'
   )

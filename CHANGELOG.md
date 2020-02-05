@@ -1,3 +1,8 @@
+4.6.0 / 2020-02-04
+------------------ 
+
+- Changed: draws no box for objects with size but no origin (Blitter, Mesh, Quad, Rope).
+
 4.5.0 / 2020-01-30
 ------------------
 
