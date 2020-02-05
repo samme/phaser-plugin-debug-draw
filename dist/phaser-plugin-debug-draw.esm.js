@@ -188,13 +188,11 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   DebugDrawPlugin.prototype.drawObj = function drawObj (obj) {
     var width = obj.displayWidth || obj.width;
     var height = obj.displayHeight || obj.height;
-    var left = obj.originX ? (obj.x - obj.originX * width) : obj.x;
-    var top = obj.originY ? (obj.y - obj.originY * height) : obj.y;
 
     this.graphic.fillPoint(obj.x, obj.y, 3 * this.lineWidth);
 
-    if (width || height) {
-      this.graphic.strokeRect(left, top, width, height);
+    if ((width || height) && ('originX' in obj)) {
+      this.graphic.strokeRect(obj.x - obj.originX * width, obj.y - obj.originY * height, width, height);
     }
 
     if (obj.rotation && this.showRotation) {
