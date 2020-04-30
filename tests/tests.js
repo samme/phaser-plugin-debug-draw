@@ -9,7 +9,7 @@ var IncX = Phaser.Actions.IncX;
 var WrapInRectangle = Phaser.Actions.WrapInRectangle;
 var images = ['blue-planet', 'elephant', 'mask', 'nebula', 'starfield']
   .map(function (name) { return { key: name }; });
-var sprites, maskImage, nebula, starfield, planet, controls, bounds, quad;
+var sprites, maskImage, nebula, starfield, planet, controls, bounds;
 
 function dragStart (pointer, gameObject) {
   gameObject.setTint(GREEN, GREEN, RED, RED);
@@ -79,42 +79,35 @@ var scene = {
       yoyo: true
     });
 
-    quad = this.add.quad(128, 640, 'elephant')
+    var quad = this.add.quad(128, 640, 'elephant')
       .setName('quadraticElephant');
+
+    this.tweens.add({
+      targets: quad,
+      props: {
+        topLeftY: { value: '-=32' },
+        bottomLeftY: { value: '-=32', delay: 200 },
+        topRightY: { value: '-=32', delay: 400 },
+        bottomRightY: { value: '-=32', delay: 600 }
+      },
+      duration: 800,
+      ease: 'Sine.easeInOut',
+      repeat: -1,
+      yoyo: true
+    });
 
     sprites.push(quad);
 
     this.add.text(0, 0, 'Drag the elephants around');
 
     this.input.keyboard
-      .on('keyup-T',
-        function () {
-          this.debugDraw.toggle();
-        }, this)
-      .on('keyup-R',
-        function () {
-          this.scene.restart();
-        }, this)
-      .on('keyup-U',
-        function () {
-          this.scene.remove();
-        }, this)
-      .on('keyup-C',
-        function () {
-          this.cameras.main.setScroll(0, 0).setZoom(1);
-        }, this)
-      .on('keyup-I',
-        function () {
-          this.debugDraw.showInput = !this.debugDraw.showInput;
-        }, this)
-      .on('keyup-P',
-        function () {
-          this.debugDraw.showPointers = !this.debugDraw.showPointers;
-        }, this)
-      .on('keyup-O',
-        function () {
-          this.debugDraw.showRotation = !this.debugDraw.showRotation;
-        }, this)
+      .on('keyup-T', function () { this.debugDraw.toggle(); }, this)
+      .on('keyup-R', function () { this.scene.restart(); }, this)
+      .on('keyup-U', function () { this.scene.remove(); }, this)
+      .on('keyup-C', function () { this.cameras.main.setScroll(0, 0).setZoom(1); }, this)
+      .on('keyup-I', function () { this.debugDraw.showInput = !this.debugDraw.showInput; }, this)
+      .on('keyup-P', function () { this.debugDraw.showPointers = !this.debugDraw.showPointers; }, this)
+      .on('keyup-O', function () { this.debugDraw.showRotation = !this.debugDraw.showRotation; }, this)
       .once('keyup-S', function () {
         this.game.renderer.snapshot(function (image) {
           image.style.width = '200px';
@@ -143,18 +136,13 @@ var scene = {
   update: function (time, delta) {
     var pointer = this.input.activePointer;
 
-    maskImage.setPosition(pointer.x, pointer.y);
+    maskImage.setPosition(pointer.worldX, pointer.worldY);
     nebula.tilePositionX -= 0.5;
     starfield.tilePositionX -= 0.25;
     planet.angle += 0.1;
 
     IncX(sprites, -1);
     WrapInRectangle(sprites, bounds, 50);
-
-    quad.topLeftY = quad.y - 40 + 10 * Math.sin(0.02 * quad.x);
-    quad.bottomLeftY = quad.y + 40 + 10 * Math.sin(0.04 * quad.x);
-    quad.topRightY = quad.y - 40 + 10 * Math.sin(0.03 * quad.x);
-    quad.bottomRightY = quad.y + 40 + 10 * Math.sin(0.05 * quad.x);
 
     controls.update(delta);
   }
