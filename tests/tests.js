@@ -23,6 +23,15 @@ function dragEnd (pointer, gameObject) {
   gameObject.clearTint();
 }
 
+function snapshot () {
+  this.game.renderer.snapshot(function (image) {
+    image.style.width = '200px';
+    image.style.height = '150px';
+
+    document.body.appendChild(image);
+  });
+}
+
 var scene = {
 
   preload: function () {
@@ -79,13 +88,13 @@ var scene = {
       yoyo: true
     });
 
-    var quad = this.add.quad(128, 640, 'elephant')
+    var quad = this.add.quad(512, 192, 'elephant')
       .setName('quadraticElephant');
 
     this.tweens.add({
       targets: quad,
       props: {
-        topLeftY: { value: '-=32' },
+        topLeftY: { value: '-=32', delay: 0 },
         bottomLeftY: { value: '-=32', delay: 200 },
         topRightY: { value: '-=32', delay: 400 },
         bottomRightY: { value: '-=32', delay: 600 }
@@ -98,6 +107,22 @@ var scene = {
 
     sprites.push(quad);
 
+    var rope = this.add.rope(768, 192, 'elephant', null, 10)
+      .setName('elephantRope');
+
+    this.add.tween({
+      targets: rope.points,
+      delay: this.tweens.stagger(100),
+      duration: 1000,
+      ease: 'Sine.easeInOut',
+      props: { y: 16 },
+      repeat: -1,
+      yoyo: true,
+      onUpdate: function (tween, target) { rope.setDirty(); }
+    });
+
+    sprites.push(rope);
+
     this.add.text(0, 0, 'Drag the elephants around');
 
     this.input.keyboard
@@ -108,14 +133,7 @@ var scene = {
       .on('keyup-I', function () { this.debugDraw.showInput = !this.debugDraw.showInput; }, this)
       .on('keyup-P', function () { this.debugDraw.showPointers = !this.debugDraw.showPointers; }, this)
       .on('keyup-O', function () { this.debugDraw.showRotation = !this.debugDraw.showRotation; }, this)
-      .once('keyup-S', function () {
-        this.game.renderer.snapshot(function (image) {
-          image.style.width = '200px';
-          image.style.height = '150px';
-
-          document.body.appendChild(image);
-        });
-      });
+      .once('keyup-S', snapshot, this);
 
     var cursors = this.input.keyboard.createCursorKeys();
 
