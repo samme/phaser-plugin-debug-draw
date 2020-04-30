@@ -6,8 +6,6 @@ const { cos, max, sin } = Math;
 
 const POINTER_RADIUS = 20;
 
-const FOLLOW_RADIUS = 20;
-
 class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   boot () {
     this.systems.events
@@ -159,7 +157,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     const width = obj.displayWidth || obj.width;
     const height = obj.displayHeight || obj.height;
 
-    this.graphic.fillPoint(obj.x, obj.y, 3 * this.lineWidth);
+    this.dot(obj.x, obj.y);
 
     if ((width || height) && ('originX' in obj)) {
       this.graphic.strokeRect(obj.x - obj.originX * width, obj.y - obj.originY * height, width, height);
@@ -241,12 +239,16 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
         .strokeRectShape(camera.deadzone);
     }
 
-    if (camera._follow) {
-      const x = camera._follow.x - camera.followOffset.x;
-      const y = camera._follow.y - camera.followOffset.y;
+    const { _follow } = camera;
 
-      this.graphic.lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha);
-      this.cross(x, y, FOLLOW_RADIUS);
+    if (_follow) {
+      const { followOffset } = camera;
+
+      this.graphic
+        .fillStyle(this.cameraFollowColor, this.alpha)
+        .lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha);
+      this.dot(_follow.x, _follow.y);
+      this.lineDelta(_follow, followOffset, -1);
     }
   }
 
@@ -284,12 +286,35 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   line (x, y, dx, dy) {
+    if (!dx && !dy) return;
     this.graphic.lineBetween(x, y, x + dx, y + dy);
   }
 
-  cross (x, y, diameter) {
-    this.line(x - diameter, y, diameter, 0);
-    this.line(x, y - diameter, 0, diameter);
+  lineDelta (start, delta, scale = 1) {
+    this.line(start.x, start.y, scale * delta.x, scale * delta.y);
+  }
+
+  cross (x, y, dx, dy) {
+    const rx = 0.5 * dx;
+    const ry = 0.5 * dy;
+
+    this.line(x - rx, y - ry, dx, dy);
+    this.line(x - rx, y + ry, dx, -dy);
+  }
+
+  diamond (x, y, dx, dy) {
+    const rx = 0.5 * dx;
+    const ry = 0.5 * dy;
+
+    this.graphic.strokePoints([{ x: x - rx, y: y }, { x: x, y: y - ry }, { x: x + rx, y: y }, { x: x, y: y + ry }], true, true);
+  }
+
+  dot (x, y) {
+    this.graphic.fillPoint(x, y, 3 * this.lineWidth);
+  }
+
+  dotPoint (p) {
+    this.dot(p.x, p.y);
   }
 }
 
