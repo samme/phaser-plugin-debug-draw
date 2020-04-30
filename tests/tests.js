@@ -1,5 +1,5 @@
 console.assert(Phaser, 'Phaser', Phaser);
-console.assert(Phaser.VERSION === '3.22.0', 'Phaser VERSION is 3.22.0', Phaser.VERSION);
+console.assert(Phaser.VERSION === '3.23.0', 'Phaser VERSION is 3.23.0', Phaser.VERSION);
 console.assert(PhaserDebugDrawPlugin, 'PhaserDebugDrawPlugin', PhaserDebugDrawPlugin);
 
 var GREEN = 0x00ffff;
