@@ -30,8 +30,6 @@ var sin = Math.sin;
 
 var POINTER_RADIUS = 20;
 
-var FOLLOW_RADIUS = 20;
-
 var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   function DebugDrawPlugin () {
     superclass.apply(this, arguments);
@@ -193,7 +191,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     var width = obj.displayWidth || obj.width;
     var height = obj.displayHeight || obj.height;
 
-    this.graphic.fillPoint(obj.x, obj.y, 3 * this.lineWidth);
+    this.dot(obj.x, obj.y);
 
     if ((width || height) && ('originX' in obj)) {
       this.graphic.strokeRect(obj.x - obj.originX * width, obj.y - obj.originY * height, width, height);
@@ -284,12 +282,16 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
         .strokeRectShape(camera.deadzone);
     }
 
-    if (camera._follow) {
-      var x = camera._follow.x - camera.followOffset.x;
-      var y = camera._follow.y - camera.followOffset.y;
+    var _follow = camera._follow;
 
-      this.graphic.lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha);
-      this.cross(x, y, FOLLOW_RADIUS);
+    if (_follow) {
+      var followOffset = camera.followOffset;
+
+      this.graphic
+        .fillStyle(this.cameraFollowColor, this.alpha)
+        .lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha);
+      this.dot(_follow.x, _follow.y);
+      this.lineDelta(_follow, followOffset, -1);
     }
   };
 
@@ -328,12 +330,37 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   };
 
   DebugDrawPlugin.prototype.line = function line (x, y, dx, dy) {
+    if (!dx && !dy) { return; }
     this.graphic.lineBetween(x, y, x + dx, y + dy);
   };
 
-  DebugDrawPlugin.prototype.cross = function cross (x, y, diameter) {
-    this.line(x - diameter, y, diameter, 0);
-    this.line(x, y - diameter, 0, diameter);
+  DebugDrawPlugin.prototype.lineDelta = function lineDelta (start, delta, scale) {
+    if ( scale === void 0 ) scale = 1;
+
+    this.line(start.x, start.y, scale * delta.x, scale * delta.y);
+  };
+
+  DebugDrawPlugin.prototype.cross = function cross (x, y, dx, dy) {
+    var rx = 0.5 * dx;
+    var ry = 0.5 * dy;
+
+    this.line(x - rx, y - ry, dx, dy);
+    this.line(x - rx, y + ry, dx, -dy);
+  };
+
+  DebugDrawPlugin.prototype.diamond = function diamond (x, y, dx, dy) {
+    var rx = 0.5 * dx;
+    var ry = 0.5 * dy;
+
+    this.graphic.strokePoints([{ x: x - rx, y: y }, { x: x, y: y - ry }, { x: x + rx, y: y }, { x: x, y: y + ry }], true, true);
+  };
+
+  DebugDrawPlugin.prototype.dot = function dot (x, y) {
+    this.graphic.fillPoint(x, y, 3 * this.lineWidth);
+  };
+
+  DebugDrawPlugin.prototype.dotPoint = function dotPoint (p) {
+    this.dot(p.x, p.y);
   };
 
   return DebugDrawPlugin;
