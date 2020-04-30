@@ -1,3 +1,9 @@
+4.7.0 / 2020-04-30
+------------------
+
+- Added: draws camera `followOffset`.
+- Changed: draws a dot for camera follow target.
+
 4.6.0 / 2020-02-04
 ------------------ 
 
