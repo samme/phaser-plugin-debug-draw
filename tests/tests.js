@@ -125,6 +125,8 @@ var scene = {
 
     this.add.text(0, 0, 'Drag the elephants around');
 
+    this.add.star(128, 32, 5, 8, 16, 0xffffff, 0.5);
+
     this.input.keyboard
       .on('keyup-T', function () { this.debugDraw.toggle(); }, this)
       .on('keyup-R', function () { this.scene.restart(); }, this)
