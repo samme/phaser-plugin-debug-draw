@@ -20,6 +20,8 @@ var colors = {
   yellow: 0xebcf00
 };
 
+var isArray = Array.isArray;
+
 var cos = Math.cos;
 var max = Math.max;
 var sin = Math.sin;
@@ -124,11 +126,11 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
       masks[masks.length] = obj;
     }
 
-    if (obj.vertices && showVertices) {
+    if (isArray(obj.vertices) && showVertices) {
       vertices[vertices.length] = obj;
     }
 
-    if (obj.points && showPoints) {
+    if (isArray(obj.points) && showPoints) {
       points[points.length] = obj;
     }
   };
