@@ -29,7 +29,7 @@ new Phaser.Game({
 Options
 -------
 
-See [source](src/main.js) or `console.log(this.debugDraw)`.
+Set properties on the plugin instance. See [source](src/main.js) or `console.log(this.debugDraw)` from the scene.
 
 Browser
 -------
@@ -47,13 +47,6 @@ ES Module
 import DebugDrawPlugin from 'phaser-plugin-debug-draw';
 ```
 
-CommonJS Module
----------------
-
-```javascript
-var DebugDrawPlugin = require('phaser-plugin-debug-draw');
-```
-
 Load on Demand
 --------------
 
@@ -65,7 +58,7 @@ this.load
   .setPrefix()
   .scenePlugin(
     'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@4.7.0',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@5.0.0',
     'debugDraw',
     'debugDraw'
   );
@@ -77,12 +70,13 @@ Load from Console
 ```javascript
 game.scene
   .getScenes(true)[0]
-  .load.setBaseURL()
+  .load
+  .setBaseURL()
   .setPath()
   .setPrefix()
   .scenePlugin(
     'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@4.7.0',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@5.0.0',
     'debugDraw',
     'debugDraw'
   )
