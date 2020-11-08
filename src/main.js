@@ -296,21 +296,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.line(start.x, start.y, scale * delta.x, scale * delta.y);
   }
 
-  cross (x, y, dx, dy) {
-    const rx = 0.5 * dx;
-    const ry = 0.5 * dy;
-
-    this.line(x - rx, y - ry, dx, dy);
-    this.line(x - rx, y + ry, dx, -dy);
-  }
-
-  diamond (x, y, dx, dy) {
-    const rx = 0.5 * dx;
-    const ry = 0.5 * dy;
-
-    this.graphic.strokePoints([{ x: x - rx, y: y }, { x: x, y: y - ry }, { x: x + rx, y: y }, { x: x, y: y + ry }], true, true);
-  }
-
   dot (x, y) {
     this.graphic.fillPoint(x, y, 3 * this.lineWidth);
   }
