@@ -8,7 +8,6 @@ export default [
     input: 'src/main.js',
     output: [
       { file: pkg.browser, format: 'umd', name: 'PhaserDebugDrawPlugin', globals: { phaser: 'Phaser' } },
-      { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' }
     ],
     external: ['phaser'],
