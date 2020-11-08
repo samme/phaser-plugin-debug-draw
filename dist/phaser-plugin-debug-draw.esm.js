@@ -338,21 +338,6 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     this.line(start.x, start.y, scale * delta.x, scale * delta.y);
   };
 
-  DebugDrawPlugin.prototype.cross = function cross (x, y, dx, dy) {
-    var rx = 0.5 * dx;
-    var ry = 0.5 * dy;
-
-    this.line(x - rx, y - ry, dx, dy);
-    this.line(x - rx, y + ry, dx, -dy);
-  };
-
-  DebugDrawPlugin.prototype.diamond = function diamond (x, y, dx, dy) {
-    var rx = 0.5 * dx;
-    var ry = 0.5 * dy;
-
-    this.graphic.strokePoints([{ x: x - rx, y: y }, { x: x, y: y - ry }, { x: x + rx, y: y }, { x: x, y: y + ry }], true, true);
-  };
-
   DebugDrawPlugin.prototype.dot = function dot (x, y) {
     this.graphic.fillPoint(x, y, 3 * this.lineWidth);
   };

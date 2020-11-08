@@ -4,7 +4,7 @@
   (global = global || self, global.PhaserDebugDrawPlugin = factory(global.Phaser));
 }(this, (function (Phaser) { 'use strict';
 
-  Phaser = Phaser && Phaser.hasOwnProperty('default') ? Phaser['default'] : Phaser;
+  Phaser = Phaser && Object.prototype.hasOwnProperty.call(Phaser, 'default') ? Phaser['default'] : Phaser;
 
   var colors = {
     aqua: 0x00d9f7,
@@ -342,21 +342,6 @@
       if ( scale === void 0 ) scale = 1;
 
       this.line(start.x, start.y, scale * delta.x, scale * delta.y);
-    };
-
-    DebugDrawPlugin.prototype.cross = function cross (x, y, dx, dy) {
-      var rx = 0.5 * dx;
-      var ry = 0.5 * dy;
-
-      this.line(x - rx, y - ry, dx, dy);
-      this.line(x - rx, y + ry, dx, -dy);
-    };
-
-    DebugDrawPlugin.prototype.diamond = function diamond (x, y, dx, dy) {
-      var rx = 0.5 * dx;
-      var ry = 0.5 * dy;
-
-      this.graphic.strokePoints([{ x: x - rx, y: y }, { x: x, y: y - ry }, { x: x + rx, y: y }, { x: x, y: y + ry }], true, true);
     };
 
     DebugDrawPlugin.prototype.dot = function dot (x, y) {
