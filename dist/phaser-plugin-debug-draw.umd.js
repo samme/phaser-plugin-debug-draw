@@ -26,8 +26,6 @@
     yellow: 0xebcf00
   };
 
-  var isArray = Array.isArray;
-
   var cos = Math.cos;
   var max = Math.max;
   var sin = Math.sin;
@@ -76,38 +74,42 @@
 
       if (!displayList.length) { return; }
 
-      var disabledInputs = [];
-      var inputs = [];
-      var masks = [];
-      var vertices = [];
-      var points = [];
+      var disabledInputObjs = [];
+      var inputObjs = [];
+      var maskedObjs = [];
+      var vertexesObjs = [];
+      var pointsObjs = [];
+      var otherObjs = [];
       var showInput = this.showInput && this.systems.input.isActive();
 
-      this.graphic
-        .clear()
-        .fillStyle(this.color, this.alpha)
-        .lineStyle(this.lineWidth, this.color, this.alpha);
+      this.graphic.clear();
 
-      displayList.each(this.processObj, this, disabledInputs, inputs, masks, vertices, points, showInput, this.showVertices, this.showPoints);
+      this.setColor(this.color);
 
-      if (vertices.length) {
-        this.drawVertices(vertices);
+      displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskedObjs, vertexesObjs, pointsObjs, otherObjs, showInput, this.showVertices, this.showPoints);
+
+      if (otherObjs.length) {
+        this.drawOthers(otherObjs);
       }
 
-      if (points.length) {
-        this.drawPoints(points);
+      if (vertexesObjs.length) {
+        this.drawVertices(vertexesObjs);
       }
 
-      if (disabledInputs.length) {
-        this.drawDisabledInputs(disabledInputs);
+      if (pointsObjs.length) {
+        this.drawPoints(pointsObjs);
       }
 
-      if (inputs.length) {
-        this.drawInputs(inputs);
+      if (disabledInputObjs.length) {
+        this.drawDisabledInputs(disabledInputObjs);
       }
 
-      if (masks.length) {
-        this.drawMasks(masks);
+      if (inputObjs.length) {
+        this.drawInputs(inputObjs);
+      }
+
+      if (maskedObjs.length) {
+        this.drawMasks(maskedObjs);
       }
 
       if (showInput && this.showPointers) {
@@ -117,27 +119,29 @@
       this.drawCamera(cameras.main);
     };
 
-    DebugDrawPlugin.prototype.processObj = function processObj (obj, disabledInputs, inputs, masks, vertices, points, showInput, showVertices, showPoints) {
+    DebugDrawPlugin.prototype.processObj = function processObj (obj, disabledInputObjs, inputObjs, masks, verticesObjs, pointsObjs, otherObjs, showInput, showVertices, showPoints) {
       if (obj.input && showInput) {
         if (obj.input.enabled) {
-          inputs[inputs.length] = obj;
+          inputObjs[inputObjs.length] = obj;
         } else {
-          disabledInputs[disabledInputs.length] = obj;
+          disabledInputObjs[disabledInputObjs.length] = obj;
         }
       } else {
-        this.drawObj(obj);
+        otherObjs[otherObjs.length] = obj;
       }
 
-      if (obj.mask && masks.indexOf(obj) === -1) {
-        masks[masks.length] = obj;
+      var bitmapMask = obj.mask ? obj.mask.bitmapMask : null;
+
+      if (bitmapMask && masks.indexOf(bitmapMask) === -1) {
+        masks[masks.length] = bitmapMask;
       }
 
-      if (isArray(obj.vertices) && showVertices) {
-        vertices[vertices.length] = obj;
+      if (obj.vertices && obj.vertices.length && showVertices) {
+        verticesObjs[verticesObjs.length] = obj;
       }
 
-      if (isArray(obj.points) && showPoints) {
-        points[points.length] = obj;
+      if (obj.points && obj.points.length && showPoints) {
+        pointsObjs[pointsObjs.length] = obj;
       }
     };
 
@@ -153,40 +157,38 @@
       this.systems = null;
     };
 
+    DebugDrawPlugin.prototype.drawOthers = function drawOthers (objs) {
+      this.setColor(this.color);
+
+      objs.forEach(this.drawObj, this);
+    };
+
     DebugDrawPlugin.prototype.drawDisabledInputs = function drawDisabledInputs (objs) {
-      this.graphic
-        .fillStyle(this.inputDisabledColor, this.alpha)
-        .lineStyle(this.lineWidth, this.inputDisabledColor, this.alpha);
+      this.setColor(this.inputDisabledColor);
 
       objs.forEach(this.drawObjInput, this);
     };
 
     DebugDrawPlugin.prototype.drawInputs = function drawInputs (objs) {
-      this.graphic
-        .fillStyle(this.inputColor, this.alpha)
-        .lineStyle(this.lineWidth, this.inputColor, this.alpha);
+      this.setColor(this.inputColor);
 
       objs.forEach(this.drawObjInput, this);
     };
 
     DebugDrawPlugin.prototype.drawMasks = function drawMasks (objs) {
-      this.graphic
-        .fillStyle(this.maskColor, this.alpha)
-        .lineStyle(this.lineWidth, this.maskColor, this.alpha);
+      this.setColor(this.maskColor);
 
-      objs.forEach(this.drawObjMask, this);
+      objs.forEach(this.drawObj, this);
     };
 
     DebugDrawPlugin.prototype.drawVertices = function drawVertices (objs) {
-      this.graphic
-        .lineStyle(this.lineWidth, this.verticesColor, this.alpha);
+      this.setColor(this.verticesColor);
 
       objs.forEach(this.drawObjVertices, this);
     };
 
     DebugDrawPlugin.prototype.drawPoints = function drawPoints (objs) {
-      this.graphic
-        .lineStyle(this.lineWidth, this.pointsColor, this.alpha);
+      this.setColor(this.pointsColor);
 
       objs.forEach(this.drawObjPoints, this);
     };
@@ -214,10 +216,6 @@
 
     DebugDrawPlugin.prototype.drawObjInput = function drawObjInput (obj) {
       this.drawObj(obj);
-    };
-
-    DebugDrawPlugin.prototype.drawObjMask = function drawObjMask (obj) {
-      if (obj.mask.bitmapMask) { this.drawObj(obj.mask.bitmapMask); }
     };
 
     DebugDrawPlugin.prototype.drawObjVertices = function drawObjVertices (obj) {
@@ -259,7 +257,7 @@
       var worldX = pointer.worldX - x;
       var worldY = pointer.worldY - y;
 
-      this.graphic.lineStyle(this.lineWidth, this.getColorForPointer(pointer), this.alpha);
+      this.setColor(this.getColorForPointer(pointer));
 
       if (pointer.locked) {
         this.graphic.strokeRect(worldX - POINTER_RADIUS, worldY - POINTER_RADIUS, 2 * POINTER_RADIUS, 2 * POINTER_RADIUS);
@@ -300,11 +298,10 @@
     };
 
     DebugDrawPlugin.prototype.getColorForPointer = function getColorForPointer (pointer) {
-      switch (true) {
-        case (pointer.isDown): return this.pointerDownColor;
-        case (!pointer.active): return this.pointerInactiveColor;
-        default: return this.pointerColor;
-      }
+      if (pointer.isDown) { return this.pointerDownColor; }
+      if (!pointer.active) { return this.pointerInactiveColor; }
+
+      return this.pointerColor;
     };
 
     DebugDrawPlugin.prototype.getPointers = function getPointers () {
@@ -331,6 +328,10 @@
 
     DebugDrawPlugin.prototype.toggle = function toggle () {
       this.graphic.setVisible(!this.graphic.visible);
+    };
+
+    DebugDrawPlugin.prototype.setColor = function setColor (color) {
+      this.graphic.fillStyle(color, this.alpha).lineStyle(this.lineWidth, color, this.alpha);
     };
 
     DebugDrawPlugin.prototype.line = function line (x, y, dx, dy) {
