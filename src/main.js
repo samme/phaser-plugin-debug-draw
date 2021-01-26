@@ -85,7 +85,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.drawCamera(cameras.main);
   }
 
-  processObj (obj, disabledInputObjs, inputObjs, maskedObjs, verticesObjs, pointsObjs, otherObjs, showInput, showVertices, showPoints) {
+  processObj (obj, disabledInputObjs, inputObjs, masks, verticesObjs, pointsObjs, otherObjs, showInput, showVertices, showPoints) {
     if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputObjs[inputObjs.length] = obj;
@@ -96,8 +96,10 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       otherObjs[otherObjs.length] = obj;
     }
 
-    if (obj.mask && maskedObjs.indexOf(obj) === -1) {
-      maskedObjs[maskedObjs.length] = obj;
+    const bitmapMask = obj.mask ? obj.mask.bitmapMask : null;
+
+    if (bitmapMask && masks.indexOf(bitmapMask) === -1) {
+      masks[masks.length] = bitmapMask;
     }
 
     if (isArray(obj.vertices) && showVertices) {
@@ -142,7 +144,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   drawMasks (objs) {
     this.setColor(this.maskColor);
 
-    objs.forEach(this.drawObjMask, this);
+    objs.forEach(this.drawObj, this);
   }
 
   drawVertices (objs) {
@@ -180,10 +182,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
   drawObjInput (obj) {
     this.drawObj(obj);
-  }
-
-  drawObjMask (obj) {
-    if (obj.mask.bitmapMask) this.drawObj(obj.mask.bitmapMask);
   }
 
   drawObjVertices (obj) {
