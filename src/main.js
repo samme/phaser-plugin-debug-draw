@@ -2,8 +2,6 @@ import Phaser from 'phaser';
 
 import colors from './colors';
 
-const { isArray } = Array;
-
 const { cos, max, sin } = Math;
 
 const POINTER_RADIUS = 20;
@@ -106,7 +104,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       verticesObjs[verticesObjs.length] = obj;
     }
 
-    if (isArray(obj.points) && showPoints) {
+    if (obj.points && obj.points.length && showPoints) {
       pointsObjs[pointsObjs.length] = obj;
     }
   }
