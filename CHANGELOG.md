@@ -1,3 +1,9 @@
+5.0.1 / 2021-01-26
+------------------
+
+- Fixed: Mesh and Rope vertices were not drawn.
+- Fixed: Masks now drawn only once.
+
 5.0.0 / 2020-11-08
 ------------------
 
