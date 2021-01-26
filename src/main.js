@@ -102,7 +102,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       masks[masks.length] = bitmapMask;
     }
 
-    if (isArray(obj.vertices) && showVertices) {
+    if (obj.vertices && obj.vertices.length && showVertices) {
       verticesObjs[verticesObjs.length] = obj;
     }
 
