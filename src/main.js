@@ -40,11 +40,11 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     if (!displayList.length) return;
 
-    const disabledInputs = [];
-    const inputs = [];
-    const masks = [];
-    const vertices = [];
-    const points = [];
+    const disabledInputObjs = [];
+    const inputObjs = [];
+    const maskObjs = [];
+    const vertexesObjs = [];
+    const pointsObjs = [];
     const showInput = this.showInput && this.systems.input.isActive();
 
     this.graphic
@@ -52,26 +52,26 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       .fillStyle(this.color, this.alpha)
       .lineStyle(this.lineWidth, this.color, this.alpha);
 
-    displayList.each(this.processObj, this, disabledInputs, inputs, masks, vertices, points, showInput, this.showVertices, this.showPoints);
+    displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskObjs, vertexesObjs, pointsObjs, showInput, this.showVertices, this.showPoints);
 
-    if (vertices.length) {
-      this.drawVertices(vertices);
+    if (vertexesObjs.length) {
+      this.drawVertices(vertexesObjs);
     }
 
-    if (points.length) {
-      this.drawPoints(points);
+    if (pointsObjs.length) {
+      this.drawPoints(pointsObjs);
     }
 
-    if (disabledInputs.length) {
-      this.drawDisabledInputs(disabledInputs);
+    if (disabledInputObjs.length) {
+      this.drawDisabledInputs(disabledInputObjs);
     }
 
-    if (inputs.length) {
-      this.drawInputs(inputs);
+    if (inputObjs.length) {
+      this.drawInputs(inputObjs);
     }
 
-    if (masks.length) {
-      this.drawMasks(masks);
+    if (maskObjs.length) {
+      this.drawMasks(maskObjs);
     }
 
     if (showInput && this.showPointers) {
@@ -81,27 +81,27 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.drawCamera(cameras.main);
   }
 
-  processObj (obj, disabledInputs, inputs, masks, vertices, points, showInput, showVertices, showPoints) {
+  processObj (obj, disabledInputObjs, inputObjs, maskObjs, verticesObjs, pointsObjs, showInput, showVertices, showPoints) {
     if (obj.input && showInput) {
       if (obj.input.enabled) {
-        inputs[inputs.length] = obj;
+        inputObjs[inputObjs.length] = obj;
       } else {
-        disabledInputs[disabledInputs.length] = obj;
+        disabledInputObjs[disabledInputObjs.length] = obj;
       }
     } else {
       this.drawObj(obj);
     }
 
-    if (obj.mask && masks.indexOf(obj) === -1) {
-      masks[masks.length] = obj;
+    if (obj.mask && maskObjs.indexOf(obj) === -1) {
+      maskObjs[maskObjs.length] = obj;
     }
 
     if (isArray(obj.vertices) && showVertices) {
-      vertices[vertices.length] = obj;
+      verticesObjs[verticesObjs.length] = obj;
     }
 
     if (isArray(obj.points) && showPoints) {
-      points[points.length] = obj;
+      pointsObjs[pointsObjs.length] = obj;
     }
   }
 
