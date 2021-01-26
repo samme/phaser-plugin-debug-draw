@@ -212,7 +212,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     const worldX = pointer.worldX - x;
     const worldY = pointer.worldY - y;
 
-    this.graphic.lineStyle(this.lineWidth, this.getColorForPointer(pointer), this.alpha);
+    this.setColor(this.getColorForPointer(pointer));
 
     if (pointer.locked) {
       this.graphic.strokeRect(worldX - POINTER_RADIUS, worldY - POINTER_RADIUS, 2 * POINTER_RADIUS, 2 * POINTER_RADIUS);
@@ -253,11 +253,10 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   getColorForPointer (pointer) {
-    switch (true) {
-      case (pointer.isDown): return this.pointerDownColor;
-      case (!pointer.active): return this.pointerInactiveColor;
-      default: return this.pointerColor;
-    }
+    if (pointer.isDown) return this.pointerDownColor;
+    if (!pointer.active) return this.pointerInactiveColor;
+
+    return this.pointerColor;
   }
 
   getPointers () {
