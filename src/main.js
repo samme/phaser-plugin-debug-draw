@@ -42,7 +42,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     const disabledInputObjs = [];
     const inputObjs = [];
-    const maskObjs = [];
+    const maskedObjs = [];
     const vertexesObjs = [];
     const pointsObjs = [];
     const showInput = this.showInput && this.systems.input.isActive();
@@ -51,7 +51,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     this.setColor(this.color);
 
-    displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskObjs, vertexesObjs, pointsObjs, showInput, this.showVertices, this.showPoints);
+    displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskedObjs, vertexesObjs, pointsObjs, showInput, this.showVertices, this.showPoints);
 
     if (vertexesObjs.length) {
       this.drawVertices(vertexesObjs);
@@ -69,8 +69,8 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       this.drawInputs(inputObjs);
     }
 
-    if (maskObjs.length) {
-      this.drawMasks(maskObjs);
+    if (maskedObjs.length) {
+      this.drawMasks(maskedObjs);
     }
 
     if (showInput && this.showPointers) {
@@ -80,7 +80,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.drawCamera(cameras.main);
   }
 
-  processObj (obj, disabledInputObjs, inputObjs, maskObjs, verticesObjs, pointsObjs, showInput, showVertices, showPoints) {
+  processObj (obj, disabledInputObjs, inputObjs, maskedObjs, verticesObjs, pointsObjs, showInput, showVertices, showPoints) {
     if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputObjs[inputObjs.length] = obj;
@@ -91,8 +91,8 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       this.drawObj(obj);
     }
 
-    if (obj.mask && maskObjs.indexOf(obj) === -1) {
-      maskObjs[maskObjs.length] = obj;
+    if (obj.mask && maskedObjs.indexOf(obj) === -1) {
+      maskedObjs[maskedObjs.length] = obj;
     }
 
     if (isArray(obj.vertices) && showVertices) {
