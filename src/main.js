@@ -228,15 +228,13 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
   drawCamera (camera) {
     if (camera.useBounds) {
-      this.graphic
-        .lineStyle(this.lineWidth, this.cameraBoundsColor, this.alpha)
-        .strokeRectShape(camera._bounds);
+      this.setColor(this.cameraBoundsColor);
+      this.graphic.strokeRectShape(camera._bounds);
     }
 
     if (camera.deadzone) {
-      this.graphic
-        .lineStyle(this.lineWidth, this.cameraDeadzoneColor, this.alpha)
-        .strokeRectShape(camera.deadzone);
+      this.setColor(this.cameraDeadzoneColor);
+      this.graphic.strokeRectShape(camera.deadzone);
     }
 
     const { _follow } = camera;
@@ -244,9 +242,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     if (_follow) {
       const { followOffset } = camera;
 
-      this.graphic
-        .fillStyle(this.cameraFollowColor, this.alpha)
-        .lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha);
+      this.setColor(this.cameraFollowColor);
       this.dot(_follow.x, _follow.y);
       this.lineDelta(_follow, followOffset, -1);
     }
