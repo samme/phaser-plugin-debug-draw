@@ -47,10 +47,9 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     const pointsObjs = [];
     const showInput = this.showInput && this.systems.input.isActive();
 
-    this.graphic
-      .clear()
-      .fillStyle(this.color, this.alpha)
-      .lineStyle(this.lineWidth, this.color, this.alpha);
+    this.graphic.clear();
+
+    this.setColor(this.color);
 
     displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskObjs, vertexesObjs, pointsObjs, showInput, this.showVertices, this.showPoints);
 
@@ -118,39 +117,31 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   drawDisabledInputs (objs) {
-    this.graphic
-      .fillStyle(this.inputDisabledColor, this.alpha)
-      .lineStyle(this.lineWidth, this.inputDisabledColor, this.alpha);
+    this.setColor(this.inputDisabledColor);
 
     objs.forEach(this.drawObjInput, this);
   }
 
   drawInputs (objs) {
-    this.graphic
-      .fillStyle(this.inputColor, this.alpha)
-      .lineStyle(this.lineWidth, this.inputColor, this.alpha);
+    this.setColor(this.inputColor);
 
     objs.forEach(this.drawObjInput, this);
   }
 
   drawMasks (objs) {
-    this.graphic
-      .fillStyle(this.maskColor, this.alpha)
-      .lineStyle(this.lineWidth, this.maskColor, this.alpha);
+    this.setColor(this.maskColor);
 
     objs.forEach(this.drawObjMask, this);
   }
 
   drawVertices (objs) {
-    this.graphic
-      .lineStyle(this.lineWidth, this.verticesColor, this.alpha);
+    this.setColor(this.verticesColor);
 
     objs.forEach(this.drawObjVertices, this);
   }
 
   drawPoints (objs) {
-    this.graphic
-      .lineStyle(this.lineWidth, this.pointsColor, this.alpha);
+    this.setColor(this.pointsColor);
 
     objs.forEach(this.drawObjPoints, this);
   }
@@ -285,6 +276,10 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
   toggle () {
     this.graphic.setVisible(!this.graphic.visible);
+  }
+
+  setColor (color) {
+    this.graphic.fillStyle(color, this.alpha).lineStyle(this.lineWidth, color, this.alpha);
   }
 
   line (x, y, dx, dy) {
