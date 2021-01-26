@@ -45,13 +45,18 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     const maskedObjs = [];
     const vertexesObjs = [];
     const pointsObjs = [];
+    const otherObjs = [];
     const showInput = this.showInput && this.systems.input.isActive();
 
     this.graphic.clear();
 
     this.setColor(this.color);
 
-    displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskedObjs, vertexesObjs, pointsObjs, showInput, this.showVertices, this.showPoints);
+    displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskedObjs, vertexesObjs, pointsObjs, otherObjs, showInput, this.showVertices, this.showPoints);
+
+    if (otherObjs.length) {
+      this.drawOthers(otherObjs);
+    }
 
     if (vertexesObjs.length) {
       this.drawVertices(vertexesObjs);
@@ -80,7 +85,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.drawCamera(cameras.main);
   }
 
-  processObj (obj, disabledInputObjs, inputObjs, maskedObjs, verticesObjs, pointsObjs, showInput, showVertices, showPoints) {
+  processObj (obj, disabledInputObjs, inputObjs, maskedObjs, verticesObjs, pointsObjs, otherObjs, showInput, showVertices, showPoints) {
     if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputObjs[inputObjs.length] = obj;
@@ -88,7 +93,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
         disabledInputObjs[disabledInputObjs.length] = obj;
       }
     } else {
-      this.drawObj(obj);
+      otherObjs[otherObjs.length] = obj;
     }
 
     if (obj.mask && maskedObjs.indexOf(obj) === -1) {
@@ -114,6 +119,12 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     this.scene = null;
     this.systems = null;
+  }
+
+  drawOthers (objs) {
+    this.setColor(this.color);
+
+    objs.forEach(this.drawObj, this);
   }
 
   drawDisabledInputs (objs) {
