@@ -4,6 +4,8 @@ import colors from './colors';
 
 const { cos, max, sin } = Math;
 
+const { Each } = Phaser.Utils.Array;
+
 const POINTER_RADIUS = 20;
 
 class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
@@ -85,6 +87,8 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       } else {
         disabledInputObjs[disabledInputObjs.length] = obj;
       }
+    } else if (obj.type === 'Layer') {
+      Each(obj.list, this.processObj, this, disabledInputObjs, inputObjs, maskObjs, otherObjs, showInput);
     } else {
       otherObjs[otherObjs.length] = obj;
     }
