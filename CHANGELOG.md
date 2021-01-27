@@ -1,3 +1,10 @@
+6.0.0 / 2021-01-27
+------------------
+
+- Removed: drawing points and vertices. Use the `setDebug()` methods of Mesh and Rope instead.
+- Added: draws Lights.
+- Added: draws game objects in Layers.
+
 5.0.1 / 2021-01-26
 ------------------
 
