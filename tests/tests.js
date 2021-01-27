@@ -1,5 +1,5 @@
 console.assert(Phaser, 'Phaser', Phaser);
-console.assert(Phaser.VERSION === '3.24.1', 'Phaser VERSION is 3.24.1', Phaser.VERSION);
+console.assert(Phaser.VERSION === '3.52.0', 'Phaser VERSION is 3.52.0', Phaser.VERSION);
 console.assert(PhaserDebugDrawPlugin, 'PhaserDebugDrawPlugin', PhaserDebugDrawPlugin);
 
 var GREEN = 0x00ffff;
@@ -39,6 +39,8 @@ var scene = {
   },
 
   create: function () {
+    this.add.pointlight(512, 192, 0xffffff, 64, 0.5, 0.05);
+
     bounds = Geom.Rectangle.Clone(this.sys.game.config);
     starfield = this.add.tileSprite(512, 384, 1024, 1024, 'starfield').setBlendMode(1);
     nebula = this.add.tileSprite(512, 384, 1024, 1024, 'nebula').setBlendMode(1);
@@ -88,27 +90,30 @@ var scene = {
       yoyo: true
     });
 
-    var quad = this.add.quad(512, 192, 'elephant')
-      .setName('quadraticElephant');
+    var mesh = this.add.mesh(512, 192, 'elephant')
+      .setName('meshElephant')
+      .addVertices([ -1, 1, 1, 1, -1, -1, 1, -1 ], [ 0, 0, 1, 0, 0, 1, 1, 1 ], [ 0, 2, 1, 2, 3, 1 ])
+      .panZ(40);
+
+    mesh.setDebug(this.debugDraw.graphic);
 
     this.tweens.add({
-      targets: quad,
+      targets: mesh.modelRotation,
       props: {
-        topLeftY: { value: '-=32', delay: 0 },
-        bottomLeftY: { value: '-=32', delay: 200 },
-        topRightY: { value: '-=32', delay: 400 },
-        bottomRightY: { value: '-=32', delay: 600 }
+        x: { value: '-0.5', delay: 0, duration: 1000 },
+        y: { value: '-0.5', delay: 500, duration: 750 }
       },
-      duration: 800,
       ease: 'Sine.easeInOut',
       repeat: -1,
       yoyo: true
     });
 
-    sprites.push(quad);
+    sprites.push(mesh);
 
     var rope = this.add.rope(768, 192, 'elephant', null, 10)
       .setName('elephantRope');
+
+    rope.setDebug(this.debugDraw.graphic);
 
     this.add.tween({
       targets: rope.points,
