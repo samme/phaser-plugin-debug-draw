@@ -42,13 +42,13 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     const disabledInputObjs = [];
     const inputObjs = [];
-    const maskedObjs = [];
+    const maskObjs = [];
     const otherObjs = [];
     const showInput = this.showInput && this.systems.input.isActive();
 
     this.graphic.clear();
 
-    displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskedObjs, otherObjs, showInput);
+    displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskObjs, otherObjs, showInput);
 
     if (otherObjs.length) {
       this.drawOthers(otherObjs);
@@ -62,8 +62,8 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       this.drawInputs(inputObjs);
     }
 
-    if (maskedObjs.length) {
-      this.drawMasks(maskedObjs);
+    if (maskObjs.length) {
+      this.drawMasks(maskObjs);
     }
 
     if (showInput && this.showPointers) {
@@ -80,7 +80,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.setColor(this.color);
   }
 
-  processObj (obj, disabledInputObjs, inputObjs, masks, otherObjs, showInput) {
+  processObj (obj, disabledInputObjs, inputObjs, maskObjs, otherObjs, showInput) {
     if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputObjs[inputObjs.length] = obj;
@@ -93,10 +93,10 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       otherObjs[otherObjs.length] = obj;
     }
 
-    const bitmapMask = obj.mask ? obj.mask.bitmapMask : null;
+    const maskObj = obj.mask ? obj.mask.bitmapMask : null;
 
-    if (bitmapMask && masks.indexOf(bitmapMask) === -1) {
-      masks[masks.length] = bitmapMask;
+    if (maskObj && maskObjs.indexOf(maskObj) === -1) {
+      maskObjs[maskObjs.length] = maskObj;
     }
   }
 
