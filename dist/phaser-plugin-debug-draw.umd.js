@@ -30,6 +30,9 @@
   var max = Math.max;
   var sin = Math.sin;
 
+  var ref = Phaser.Utils.Array;
+  var Each = ref.Each;
+
   var POINTER_RADIUS = 20;
 
   var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
@@ -71,33 +74,22 @@
       var ref = this.systems;
       var cameras = ref.cameras;
       var displayList = ref.displayList;
+      var lights = ref.lights;
 
       if (!displayList.length) { return; }
 
       var disabledInputObjs = [];
       var inputObjs = [];
-      var maskedObjs = [];
-      var vertexesObjs = [];
-      var pointsObjs = [];
+      var maskObjs = [];
       var otherObjs = [];
       var showInput = this.showInput && this.systems.input.isActive();
 
       this.graphic.clear();
 
-      this.setColor(this.color);
-
-      displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskedObjs, vertexesObjs, pointsObjs, otherObjs, showInput, this.showVertices, this.showPoints);
+      displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskObjs, otherObjs, showInput);
 
       if (otherObjs.length) {
         this.drawOthers(otherObjs);
-      }
-
-      if (vertexesObjs.length) {
-        this.drawVertices(vertexesObjs);
-      }
-
-      if (pointsObjs.length) {
-        this.drawPoints(pointsObjs);
       }
 
       if (disabledInputObjs.length) {
@@ -108,8 +100,8 @@
         this.drawInputs(inputObjs);
       }
 
-      if (maskedObjs.length) {
-        this.drawMasks(maskedObjs);
+      if (maskObjs.length) {
+        this.drawMasks(maskObjs);
       }
 
       if (showInput && this.showPointers) {
@@ -117,31 +109,32 @@
       }
 
       this.drawCamera(cameras.main);
+
+      if (lights && lights.active && this.showLights) {
+        this.drawLights(lights.lights);
+      }
+
+      // For Mesh/Rope debug callbacks
+      this.setColor(this.color);
     };
 
-    DebugDrawPlugin.prototype.processObj = function processObj (obj, disabledInputObjs, inputObjs, masks, verticesObjs, pointsObjs, otherObjs, showInput, showVertices, showPoints) {
+    DebugDrawPlugin.prototype.processObj = function processObj (obj, disabledInputObjs, inputObjs, maskObjs, otherObjs, showInput) {
       if (obj.input && showInput) {
         if (obj.input.enabled) {
           inputObjs[inputObjs.length] = obj;
         } else {
           disabledInputObjs[disabledInputObjs.length] = obj;
         }
+      } else if (obj.type === 'Layer') {
+        Each(obj.list, this.processObj, this, disabledInputObjs, inputObjs, maskObjs, otherObjs, showInput);
       } else {
         otherObjs[otherObjs.length] = obj;
       }
 
-      var bitmapMask = obj.mask ? obj.mask.bitmapMask : null;
+      var maskObj = obj.mask ? obj.mask.bitmapMask : null;
 
-      if (bitmapMask && masks.indexOf(bitmapMask) === -1) {
-        masks[masks.length] = bitmapMask;
-      }
-
-      if (obj.vertices && obj.vertices.length && showVertices) {
-        verticesObjs[verticesObjs.length] = obj;
-      }
-
-      if (obj.points && obj.points.length && showPoints) {
-        pointsObjs[pointsObjs.length] = obj;
+      if (maskObj && maskObjs.indexOf(maskObj) === -1) {
+        maskObjs[maskObjs.length] = maskObj;
       }
     };
 
@@ -181,18 +174,6 @@
       objs.forEach(this.drawObj, this);
     };
 
-    DebugDrawPlugin.prototype.drawVertices = function drawVertices (objs) {
-      this.setColor(this.verticesColor);
-
-      objs.forEach(this.drawObjVertices, this);
-    };
-
-    DebugDrawPlugin.prototype.drawPoints = function drawPoints (objs) {
-      this.setColor(this.pointsColor);
-
-      objs.forEach(this.drawObjPoints, this);
-    };
-
     DebugDrawPlugin.prototype.drawObj = function drawObj (obj) {
       var width = obj.displayWidth || obj.width;
       var height = obj.displayHeight || obj.height;
@@ -216,31 +197,6 @@
 
     DebugDrawPlugin.prototype.drawObjInput = function drawObjInput (obj) {
       this.drawObj(obj);
-    };
-
-    DebugDrawPlugin.prototype.drawObjVertices = function drawObjVertices (obj) {
-      var x = obj.x;
-      var y = obj.y;
-      var scaleX = obj.scaleX;
-      var scaleY = obj.scaleY;
-      var v = obj.vertices;
-      var half = 0.5 * v.length;
-      var points = [];
-
-      for (var i = 0; i < half; i += 1) {
-        points[i] = { x: x + scaleX * v[2 * i], y: y + scaleY * v[2 * i + 1] };
-      }
-
-      this.graphic.strokePoints(points);
-    };
-
-    DebugDrawPlugin.prototype.drawObjPoints = function drawObjPoints (obj) {
-      var x = obj.x;
-      var y = obj.y;
-      var scaleX = obj.scaleX;
-      var scaleY = obj.scaleY;
-
-      this.graphic.strokePoints(obj.points.map(function (p) { return ({ x: x + scaleX * p.x, y: y + scaleY * p.y }); }));
     };
 
     DebugDrawPlugin.prototype.drawPointers = function drawPointers (pointers) {
@@ -273,15 +229,13 @@
 
     DebugDrawPlugin.prototype.drawCamera = function drawCamera (camera) {
       if (camera.useBounds) {
-        this.graphic
-          .lineStyle(this.lineWidth, this.cameraBoundsColor, this.alpha)
-          .strokeRectShape(camera._bounds);
+        this.setColor(this.cameraBoundsColor);
+        this.graphic.strokeRectShape(camera._bounds);
       }
 
       if (camera.deadzone) {
-        this.graphic
-          .lineStyle(this.lineWidth, this.cameraDeadzoneColor, this.alpha)
-          .strokeRectShape(camera.deadzone);
+        this.setColor(this.cameraDeadzoneColor);
+        this.graphic.strokeRectShape(camera.deadzone);
       }
 
       var _follow = camera._follow;
@@ -289,12 +243,20 @@
       if (_follow) {
         var followOffset = camera.followOffset;
 
-        this.graphic
-          .fillStyle(this.cameraFollowColor, this.alpha)
-          .lineStyle(this.lineWidth, this.cameraFollowColor, this.alpha);
+        this.setColor(this.cameraFollowColor);
         this.dot(_follow.x, _follow.y);
         this.lineDelta(_follow, followOffset, -1);
       }
+    };
+
+    DebugDrawPlugin.prototype.drawLights = function drawLights (lights) {
+      this.setColor(this.lightColor);
+
+      lights.forEach(this.drawLight, this);
+    };
+
+    DebugDrawPlugin.prototype.drawLight = function drawLight (light) {
+      this.graphic.strokeCircleShape(light);
     };
 
     DebugDrawPlugin.prototype.getColorForPointer = function getColorForPointer (pointer) {
@@ -364,19 +326,17 @@
     color: colors.aqua,
     inputColor: colors.yellow,
     inputDisabledColor: colors.silver,
+    lightColor: colors.purple,
     lineWidth: 1,
     maskColor: colors.red,
     pointerColor: colors.yellow,
     pointerDownColor: colors.green,
     pointerInactiveColor: colors.silver,
-    pointsColor: colors.olive,
     showInactivePointers: false,
     showInput: true,
+    showLights: true,
     showPointers: true,
-    showPoints: true,
-    showRotation: true,
-    showVertices: true,
-    verticesColor: colors.blue
+    showRotation: true
   });
 
   return DebugDrawPlugin;
