@@ -3,15 +3,21 @@
 Phaser 3 Debug Draw Plugin
 ==========================
 
+[Demo](https://codepen.io/samme/full/zMZyOM/) | [Screenshots](https://phaser.discourse.group/t/debug-draw-plugin-phaser-3/4480)
+
 It shows:
 
 - Game Objects (origin, bounds, rotation, input)
 - Bitmap Masks
 - Input pointers
 - Camera bounds, deadzone, and follow target
-- Mesh and Rope vertices
+- Lights
 
-[Demo](https://codepen.io/samme/full/zMZyOM/) | [Screenshots](https://phaser.discourse.group/t/debug-draw-plugin-phaser-3/4480)
+It doesn't show:
+
+- Game Objects in Containers
+- Blitter Bobs
+- Particle Emitters
 
 Use
 ---
@@ -26,13 +32,8 @@ new Phaser.Game({
 });
 ```
 
-Options
--------
-
-Set properties on the plugin instance. See [source](src/main.js) or `console.log(this.debugDraw)` from the scene.
-
-Browser
--------
+Browser / UMD
+-------------
 
 ```html
 <script src='path/to/phaser-plugin-debug-draw.umd.js'></script>
@@ -47,18 +48,40 @@ ES Module
 import DebugDrawPlugin from 'phaser-plugin-debug-draw';
 ```
 
+Options
+-------
+
+Set properties on the plugin instance, e.g.,
+
+```javascript
+// Scene `init()` or `create()`
+this.debugDraw.showPointers = false;
+```
+
+See `console.log(this.debugDraw)` for all the options.
+
+Mesh & Rope
+-----------
+
+```javascript
+// Scene create()
+// …
+mesh.setDebug(this.debugDraw.graphic);
+rope.setDebug(this.debugDraw.graphic);
+```
+
 Load on Demand
 --------------
 
 ```javascript
-// From scene `preload()`
+// Scene `preload()`
 this.load
   .setBaseURL()
   .setPath()
   .setPrefix()
   .scenePlugin(
     'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@5.0.1',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@6.0.0',
     'debugDraw',
     'debugDraw'
   );
@@ -76,7 +99,7 @@ game.scene
   .setPrefix()
   .scenePlugin(
     'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@5.0.0',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@6.0.0',
     'debugDraw',
     'debugDraw'
   )
