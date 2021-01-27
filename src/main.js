@@ -34,34 +34,22 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   drawAll () {
-    const { cameras, displayList } = this.systems;
+    const { cameras, displayList, lights } = this.systems;
 
     if (!displayList.length) return;
 
     const disabledInputObjs = [];
     const inputObjs = [];
     const maskedObjs = [];
-    const vertexesObjs = [];
-    const pointsObjs = [];
     const otherObjs = [];
     const showInput = this.showInput && this.systems.input.isActive();
 
     this.graphic.clear();
 
-    this.setColor(this.color);
-
-    displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskedObjs, vertexesObjs, pointsObjs, otherObjs, showInput, this.showVertices, this.showPoints);
+    displayList.each(this.processObj, this, disabledInputObjs, inputObjs, maskedObjs, otherObjs, showInput);
 
     if (otherObjs.length) {
       this.drawOthers(otherObjs);
-    }
-
-    if (vertexesObjs.length) {
-      this.drawVertices(vertexesObjs);
-    }
-
-    if (pointsObjs.length) {
-      this.drawPoints(pointsObjs);
     }
 
     if (disabledInputObjs.length) {
@@ -81,9 +69,16 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     }
 
     this.drawCamera(cameras.main);
+
+    if (lights && lights.active && this.showLights) {
+      this.drawLights(lights.lights);
+    }
+
+    // For Mesh/Rope debug callbacks
+    this.setColor(this.color);
   }
 
-  processObj (obj, disabledInputObjs, inputObjs, masks, verticesObjs, pointsObjs, otherObjs, showInput, showVertices, showPoints) {
+  processObj (obj, disabledInputObjs, inputObjs, masks, otherObjs, showInput) {
     if (obj.input && showInput) {
       if (obj.input.enabled) {
         inputObjs[inputObjs.length] = obj;
@@ -98,14 +93,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     if (bitmapMask && masks.indexOf(bitmapMask) === -1) {
       masks[masks.length] = bitmapMask;
-    }
-
-    if (obj.vertices && obj.vertices.length && showVertices) {
-      verticesObjs[verticesObjs.length] = obj;
-    }
-
-    if (obj.points && obj.points.length && showPoints) {
-      pointsObjs[pointsObjs.length] = obj;
     }
   }
 
@@ -145,18 +132,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     objs.forEach(this.drawObj, this);
   }
 
-  drawVertices (objs) {
-    this.setColor(this.verticesColor);
-
-    objs.forEach(this.drawObjVertices, this);
-  }
-
-  drawPoints (objs) {
-    this.setColor(this.pointsColor);
-
-    objs.forEach(this.drawObjPoints, this);
-  }
-
   drawObj (obj) {
     const width = obj.displayWidth || obj.width;
     const height = obj.displayHeight || obj.height;
@@ -180,25 +155,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
   drawObjInput (obj) {
     this.drawObj(obj);
-  }
-
-  drawObjVertices (obj) {
-    const { x, y, scaleX, scaleY } = obj;
-    const v = obj.vertices;
-    const half = 0.5 * v.length;
-    const points = [];
-
-    for (let i = 0; i < half; i += 1) {
-      points[i] = { x: x + scaleX * v[2 * i], y: y + scaleY * v[2 * i + 1] };
-    }
-
-    this.graphic.strokePoints(points);
-  }
-
-  drawObjPoints (obj) {
-    const { x, y, scaleX, scaleY } = obj;
-
-    this.graphic.strokePoints(obj.points.map(p => ({ x: x + scaleX * p.x, y: y + scaleY * p.y })));
   }
 
   drawPointers (pointers) {
@@ -246,6 +202,16 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       this.dot(_follow.x, _follow.y);
       this.lineDelta(_follow, followOffset, -1);
     }
+  }
+
+  drawLights (lights) {
+    this.setColor(this.lightColor);
+
+    lights.forEach(this.drawLight, this);
+  }
+
+  drawLight (light) {
+    this.graphic.strokeCircleShape(light);
   }
 
   getColorForPointer (pointer) {
@@ -310,19 +276,17 @@ Object.assign(DebugDrawPlugin.prototype, {
   color: colors.aqua,
   inputColor: colors.yellow,
   inputDisabledColor: colors.silver,
+  lightColor: colors.purple,
   lineWidth: 1,
   maskColor: colors.red,
   pointerColor: colors.yellow,
   pointerDownColor: colors.green,
   pointerInactiveColor: colors.silver,
-  pointsColor: colors.olive,
   showInactivePointers: false,
   showInput: true,
+  showLights: true,
   showPointers: true,
-  showPoints: true,
-  showRotation: true,
-  showVertices: true,
-  verticesColor: colors.blue
+  showRotation: true
 });
 
 export default DebugDrawPlugin;
