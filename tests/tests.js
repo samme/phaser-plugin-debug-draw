@@ -2,6 +2,7 @@ console.assert(Phaser, 'Phaser', Phaser);
 console.assert(Phaser.VERSION === '3.52.0', 'Phaser VERSION is 3.52.0', Phaser.VERSION);
 console.assert(PhaserDebugDrawPlugin, 'PhaserDebugDrawPlugin', PhaserDebugDrawPlugin);
 
+var WHITE = 0xffffff;
 var GREEN = 0x00ffff;
 var RED = 0xff0000;
 var Geom = Phaser.Geom;
@@ -39,11 +40,15 @@ var scene = {
   },
 
   create: function () {
+    this.lights.enable().setAmbientColor(WHITE);
+
     this.add.pointlight(512, 192, 0xffffff, 64, 0.5, 0.05);
 
+    this.lights.addLight(128, 128, 256, RED, 2);
+
     bounds = Geom.Rectangle.Clone(this.sys.game.config);
-    starfield = this.add.tileSprite(512, 384, 1024, 1024, 'starfield').setBlendMode(1);
-    nebula = this.add.tileSprite(512, 384, 1024, 1024, 'nebula').setBlendMode(1);
+    starfield = this.add.tileSprite(512, 384, 1024, 1024, 'starfield').setBlendMode(1).setPipeline('Light2D');
+    nebula = this.add.tileSprite(512, 384, 1024, 1024, 'nebula').setBlendMode(1).setPipeline('Light2D');
     planet = this.add.image(512, 384, 'blue-planet');
     maskImage = this.make.image({ key: 'mask', add: false });
 
@@ -72,6 +77,10 @@ var scene = {
     sprites[2]
       .setName('maskedElephant')
       .setMask(mask);
+
+    var layer = this.add.layer();
+
+    layer.add(sprites);
 
     Phaser.Actions.PropertyValueSet(sprites, 'angle', -15);
 
