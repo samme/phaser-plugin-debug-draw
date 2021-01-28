@@ -60,6 +60,13 @@ this.debugDraw.showPointers = false;
 
 See `console.log(this.debugDraw)` for all the options.
 
+Position & Bounds
+-----------------
+
+It draws a dot on the Game Object's `x`, `y`.
+
+If the Game Object has an origin, it also draws a rectangle from the origin with dimensions (`displayWidth`, `displayWidth`) or (`height`, `width`).
+
 Mesh & Rope
 -----------
 
