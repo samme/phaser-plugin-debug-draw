@@ -78,6 +78,10 @@ var scene = {
       .setName('maskedElephant')
       .setMask(mask);
 
+    sprites[3]
+      .setName('infinitesimalElephant')
+      .setScale(0);
+
     var layer = this.add.layer();
 
     layer.add(sprites);
