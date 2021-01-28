@@ -169,24 +169,27 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   };
 
   DebugDrawPlugin.prototype.drawObj = function drawObj (obj) {
-    var width = obj.displayWidth || obj.width;
-    var height = obj.displayHeight || obj.height;
-
     this.dot(obj.x, obj.y);
 
-    if ((width || height) && ('originX' in obj)) {
-      this.graphic.strokeRect(obj.x - obj.originX * width, obj.y - obj.originY * height, width, height);
+    if ('originX' in obj) {
+      var width = obj.width;
+      var height = obj.height;
+
+      if ('displayWidth' in obj) {
+        width = obj.displayWidth;
+        height = obj.displayHeight;
+      }
+
+      if (width || height) {
+        this.graphic.strokeRect(obj.x - obj.originX * width, obj.y - obj.originY * height, width, height);
+
+        if (obj.rotation && this.showRotation) {
+          var rad = 0.5 * max(width, height);
+
+          this.line(obj.x, obj.y, cos(obj.rotation) * rad, sin(obj.rotation) * rad);
+        }
+      }
     }
-
-    if (obj.rotation && this.showRotation) {
-      this.drawObjRotation(obj);
-    }
-  };
-
-  DebugDrawPlugin.prototype.drawObjRotation = function drawObjRotation (obj) {
-    var length = 0.5 * max((obj.displayWidth || obj.width), (obj.displayHeight || obj.height));
-
-    this.line(obj.x, obj.y, cos(obj.rotation) * length, sin(obj.rotation) * length);
   };
 
   DebugDrawPlugin.prototype.drawObjInput = function drawObjInput (obj) {
