@@ -10,10 +10,14 @@ const POINTER_RADIUS = 20;
 
 class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   boot () {
+    if (Phaser.VERSION.split('.')[1] < 53) {
+      throw new Error('Phaser v3.53.0 or greater is required');
+    }
+
     this.systems.events
       .on('start', this.sceneStart, this)
       .on('create', this.bringToTop, this)
-      .on('postupdate', this.scenePostUpdate, this)
+      .on('prerender', this.scenePreRender, this)
       .on('shutdown', this.sceneShutdown, this)
       .once('destroy', this.sceneDestroy, this);
 
@@ -31,7 +35,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.graphic = null;
   }
 
-  scenePostUpdate () {
+  scenePreRender () {
     this.drawAll();
   }
 
@@ -104,7 +108,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
     this.systems.events
       .off('start', this.sceneStart, this)
       .off('create', this.bringToTop, this)
-      .off('postupdate', this.scenePostUpdate, this)
+      .off('prerender', this.scenePreRender, this)
       .off('shutdown', this.sceneShutdown, this)
       .off('destroy', this.sceneDestroy, this);
 
