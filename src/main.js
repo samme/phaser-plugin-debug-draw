@@ -1,25 +1,23 @@
 import Phaser from 'phaser';
-
 import colors from './colors';
 
 const { cos, max, sin } = Math;
-
+const { START, CREATE, PRE_RENDER, SHUTDOWN, DESTROY } = Phaser.Scenes.Events;
 const { Each } = Phaser.Utils.Array;
-
 const POINTER_RADIUS = 20;
 
 class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   boot () {
     if (Phaser.VERSION.split('.')[1] < 53) {
-      throw new Error('Phaser v3.53.0 or greater is required');
+      throw new Error('Phaser v3.53.0 or greater is required. Or use <https://github.com/samme/phaser-plugin-debug-draw/releases/tag/v6.0.1>');
     }
 
     this.systems.events
-      .on('start', this.sceneStart, this)
-      .on('create', this.bringToTop, this)
-      .on('prerender', this.scenePreRender, this)
-      .on('shutdown', this.sceneShutdown, this)
-      .once('destroy', this.sceneDestroy, this);
+      .on(START, this.sceneStart, this)
+      .on(CREATE, this.bringToTop, this)
+      .on(PRE_RENDER, this.scenePreRender, this)
+      .on(SHUTDOWN, this.sceneShutdown, this)
+      .once(DESTROY, this.sceneDestroy, this);
 
     if (this.systems.settings.isBooted) {
       this.sceneStart();
@@ -106,11 +104,11 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
   sceneDestroy () {
     this.systems.events
-      .off('start', this.sceneStart, this)
-      .off('create', this.bringToTop, this)
-      .off('prerender', this.scenePreRender, this)
-      .off('shutdown', this.sceneShutdown, this)
-      .off('destroy', this.sceneDestroy, this);
+      .off(START, this.sceneStart, this)
+      .off(CREATE, this.bringToTop, this)
+      .off(PRE_RENDER, this.scenePreRender, this)
+      .off(SHUTDOWN, this.sceneShutdown, this)
+      .off(DESTROY, this.sceneDestroy, this);
 
     this.scene = null;
     this.systems = null;
