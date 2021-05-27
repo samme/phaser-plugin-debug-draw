@@ -23,10 +23,14 @@ var colors = {
 var cos = Math.cos;
 var max = Math.max;
 var sin = Math.sin;
-
-var ref = Phaser.Utils.Array;
-var Each = ref.Each;
-
+var ref = Phaser.Scenes.Events;
+var START = ref.START;
+var CREATE = ref.CREATE;
+var PRE_RENDER = ref.PRE_RENDER;
+var SHUTDOWN = ref.SHUTDOWN;
+var DESTROY = ref.DESTROY;
+var ref$1 = Phaser.Utils.Array;
+var Each = ref$1.Each;
 var POINTER_RADIUS = 20;
 
 var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
@@ -39,12 +43,16 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   DebugDrawPlugin.prototype.constructor = DebugDrawPlugin;
 
   DebugDrawPlugin.prototype.boot = function boot () {
+    if (Phaser.VERSION.split('.')[1] < 53) {
+      throw new Error('Phaser v3.53.0 or greater is required. Or use <https://github.com/samme/phaser-plugin-debug-draw/releases/tag/v6.0.1>');
+    }
+
     this.systems.events
-      .on('start', this.sceneStart, this)
-      .on('create', this.bringToTop, this)
-      .on('postupdate', this.scenePostUpdate, this)
-      .on('shutdown', this.sceneShutdown, this)
-      .once('destroy', this.sceneDestroy, this);
+      .on(START, this.sceneStart, this)
+      .on(CREATE, this.bringToTop, this)
+      .on(PRE_RENDER, this.scenePreRender, this)
+      .on(SHUTDOWN, this.sceneShutdown, this)
+      .once(DESTROY, this.sceneDestroy, this);
 
     if (this.systems.settings.isBooted) {
       this.sceneStart();
@@ -60,7 +68,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
     this.graphic = null;
   };
 
-  DebugDrawPlugin.prototype.scenePostUpdate = function scenePostUpdate () {
+  DebugDrawPlugin.prototype.scenePreRender = function scenePreRender () {
     this.drawAll();
   };
 
@@ -134,11 +142,11 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
 
   DebugDrawPlugin.prototype.sceneDestroy = function sceneDestroy () {
     this.systems.events
-      .off('start', this.sceneStart, this)
-      .off('create', this.bringToTop, this)
-      .off('postupdate', this.scenePostUpdate, this)
-      .off('shutdown', this.sceneShutdown, this)
-      .off('destroy', this.sceneDestroy, this);
+      .off(START, this.sceneStart, this)
+      .off(CREATE, this.bringToTop, this)
+      .off(PRE_RENDER, this.scenePreRender, this)
+      .off(SHUTDOWN, this.sceneShutdown, this)
+      .off(DESTROY, this.sceneDestroy, this);
 
     this.scene = null;
     this.systems = null;
