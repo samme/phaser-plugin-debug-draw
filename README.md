@@ -3,11 +3,11 @@
 Phaser 3 Debug Draw Plugin
 ==========================
 
-[Demo](https://codepen.io/samme/full/zMZyOM/) | [Screenshots](https://phaser.discourse.group/t/debug-draw-plugin-phaser-3/4480)
+See [demo](https://codepen.io/samme/full/zMZyOM/), [screenshots](https://phaser.discourse.group/t/debug-draw-plugin-phaser-3/4480).
 
 It shows:
 
-- Game Objects (origin, bounds, rotation, input)
+- Game Objects with origin, bounds, rotation, input
 - Bitmap Masks
 - Input pointers
 - Camera bounds, deadzone, and follow target
@@ -19,10 +19,15 @@ It doesn't show:
 - Blitter Bobs
 - Particle Emitters
 
-Use
----
+Browser / UMD
+-------------
 
-```javascript
+```html
+<script src='path/to/phaser-plugin-debug-draw.umd.js'></script>
+```
+
+```js
+/* global PhaserDebugDrawPlugin */
 new Phaser.Game({
   plugins: {
     scene: [
@@ -32,20 +37,19 @@ new Phaser.Game({
 });
 ```
 
-Browser / UMD
--------------
+Module
+------
 
-```html
-<script src='path/to/phaser-plugin-debug-draw.umd.js'></script>
-```
-
-Then use the global `PhaserDebugDrawPlugin`.
-
-ES Module
----------
-
-```javascript
+```js
 import DebugDrawPlugin from 'phaser-plugin-debug-draw';
+
+new Phaser.Game({
+  plugins: {
+    scene: [
+      { key: 'DebugDrawPlugin', plugin: DebugDrawPlugin, mapping: 'debugDraw' }
+    ]
+  }
+});
 ```
 
 Options
@@ -53,8 +57,8 @@ Options
 
 Set properties on the plugin instance, e.g.,
 
-```javascript
-// Scene `init()` or `create()`
+```js
+// In scene `init()` or `create()`:
 this.debugDraw.showPointers = false;
 ```
 
@@ -70,9 +74,8 @@ If the Game Object has an origin, it also draws a rectangle from the origin with
 Mesh & Rope
 -----------
 
-```javascript
-// Scene create()
-// …
+```js
+// In scene `create()`:
 mesh.setDebug(this.debugDraw.graphic);
 rope.setDebug(this.debugDraw.graphic);
 ```
@@ -80,15 +83,15 @@ rope.setDebug(this.debugDraw.graphic);
 Load on Demand
 --------------
 
-```javascript
-// Scene `preload()`
+```js
+// In scene `preload()`:
 this.load
   .setBaseURL()
   .setPath()
   .setPrefix()
   .scenePlugin(
     'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@6.0.1',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.0.0',
     'debugDraw',
     'debugDraw'
   );
@@ -97,7 +100,7 @@ this.load
 Load from Console
 -----------------
 
-```javascript
+```js
 game.scene
   .getScenes(true)[0]
   .load
@@ -106,7 +109,7 @@ game.scene
   .setPrefix()
   .scenePlugin(
     'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@6.0.1',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.0.0',
     'debugDraw',
     'debugDraw'
   )
