@@ -1,3 +1,9 @@
+7.0.0 / 2021-05-27
+------------------
+
+- Changed: Phaser v3.53.0 or later is required.
+- Changed: uses the scene `PRE_RENDER` event instead of `POST_UPDATE`.
+
 6.0.1 / 2021-01-28
 ------------------
 
