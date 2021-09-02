@@ -24,7 +24,7 @@ Install
 
 ### Browser / UMD
 
-Download and add the [plugin UMD script](dist/phaser-plugin-debug-draw.umd.js)
+Download and add the [plugin UMD script](dist/phaser-plugin-debug-draw.umd.js):
 
 ```html
 <script src='path/to/phaser.js'></script>
