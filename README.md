@@ -19,12 +19,26 @@ It doesn't show:
 - Blitter Bobs
 - Particle Emitters
 
-Browser / UMD
--------------
+Install
+-------
+
+### Browser / UMD
+
+Download and add the [plugin UMD script](dist/phaser-plugin-debug-draw.umd.js)
 
 ```html
+<script src='path/to/phaser.js'></script>
 <script src='path/to/phaser-plugin-debug-draw.umd.js'></script>
 ```
+
+Or use the CDN scripts:
+
+```html
+<script src='https://cdn.jsdelivr.net/npm/phaser@3.55.2'></script>
+<script src='https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.0.0'></script>
+```
+
+Then add to your game config:
 
 ```js
 /* global PhaserDebugDrawPlugin */
@@ -37,8 +51,7 @@ new Phaser.Game({
 });
 ```
 
-Module
-------
+### Module
 
 ```js
 import DebugDrawPlugin from 'phaser-plugin-debug-draw';
@@ -50,6 +63,36 @@ new Phaser.Game({
     ]
   }
 });
+```
+
+### Quick Load
+
+```js
+function preload () {
+  this.load.scenePlugin(
+    'PhaserDebugDrawPlugin',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.0.0',
+    'debugDraw',
+    'debugDraw'
+  );
+}
+```
+
+### Load from Console
+
+Given a global variable `game`:
+
+```js
+game.scene
+  .getScenes(true)[0]
+  .load
+  .scenePlugin(
+    'PhaserDebugDrawPlugin',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.0.0',
+    'debugDraw',
+    'debugDraw'
+  )
+  .start();
 ```
 
 Options
@@ -78,40 +121,4 @@ Mesh & Rope
 // In scene `create()`:
 mesh.setDebug(this.debugDraw.graphic);
 rope.setDebug(this.debugDraw.graphic);
-```
-
-Load on Demand
---------------
-
-```js
-// In scene `preload()`:
-this.load
-  .setBaseURL()
-  .setPath()
-  .setPrefix()
-  .scenePlugin(
-    'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.0.0',
-    'debugDraw',
-    'debugDraw'
-  );
-```
-
-Load from Console
------------------
-
-```js
-game.scene
-  .getScenes(true)[0]
-  .load
-  .setBaseURL()
-  .setPath()
-  .setPrefix()
-  .scenePlugin(
-    'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.0.0',
-    'debugDraw',
-    'debugDraw'
-  )
-  .start();
 ```
