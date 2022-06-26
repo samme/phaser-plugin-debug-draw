@@ -3,7 +3,7 @@
 Phaser 3 Debug Draw Plugin
 ==========================
 
-See [demo](https://codepen.io/samme/full/zMZyOM/), [screenshots](https://phaser.discourse.group/t/debug-draw-plugin-phaser-3/4480).
+See [demos](https://codepen.io/collection/GomapQ), [screenshots](https://phaser.discourse.group/t/debug-draw-plugin-phaser-3/4480).
 
 It shows:
 
