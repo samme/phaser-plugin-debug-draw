@@ -22,6 +22,10 @@ It doesn't show:
 Install
 -------
 
+The current version of the plugin requires Phaser v3.53.0 or later.
+
+It should also work with Phaser's v3.60.0-beta series, but you'll need to use npm's `--force` to install despite the version conflict.
+
 ### Browser / UMD
 
 Download and add the [plugin UMD script](dist/phaser-plugin-debug-draw.umd.js):
