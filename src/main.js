@@ -14,7 +14,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
 
     this.systems.events
       .on(START, this.sceneStart, this)
-      .on(CREATE, this.bringToTop, this)
       .on(PRE_RENDER, this.scenePreRender, this)
       .on(SHUTDOWN, this.sceneShutdown, this)
       .once(DESTROY, this.sceneDestroy, this);
@@ -25,7 +24,7 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   sceneStart () {
-    this.graphic = this.scene.add.graphics();
+    this.graphic = this.scene.add.graphics().setDepth(Number.MAX_VALUE);
   }
 
   sceneShutdown () {
@@ -105,7 +104,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
   sceneDestroy () {
     this.systems.events
       .off(START, this.sceneStart, this)
-      .off(CREATE, this.bringToTop, this)
       .off(PRE_RENDER, this.scenePreRender, this)
       .off(SHUTDOWN, this.sceneShutdown, this)
       .off(DESTROY, this.sceneDestroy, this);
@@ -244,10 +242,6 @@ class DebugDrawPlugin extends Phaser.Plugins.ScenePlugin {
       input.pointer8,
       input.pointer9
     ].filter(Boolean);
-  }
-
-  bringToTop () {
-    this.systems.displayList.bringToTop(this.graphic);
   }
 
   toggle () {
