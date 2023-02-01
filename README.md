@@ -39,7 +39,7 @@ Or use the CDN scripts:
 
 ```html
 <script src='https://cdn.jsdelivr.net/npm/phaser@3.55.2'></script>
-<script src='https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.0.0'></script>
+<script src='https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.1.0'></script>
 ```
 
 Then add to your game config:
@@ -75,7 +75,7 @@ new Phaser.Game({
 function preload () {
   this.load.scenePlugin(
     'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.0.0',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.1.0',
     'debugDraw',
     'debugDraw'
   );
@@ -92,7 +92,7 @@ game.scene
   .load
   .scenePlugin(
     'PhaserDebugDrawPlugin',
-    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.0.0',
+    'https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.1.0',
     'debugDraw',
     'debugDraw'
   )
