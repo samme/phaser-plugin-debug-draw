@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import colors from './colors';
 
 const { cos, max, sin } = Math;
-const { START, CREATE, PRE_RENDER, SHUTDOWN, DESTROY } = Phaser.Scenes.Events;
+const { START, PRE_RENDER, SHUTDOWN, DESTROY } = Phaser.Scenes.Events;
 const { Each } = Phaser.Utils.Array;
 const POINTER_RADIUS = 20;
 
