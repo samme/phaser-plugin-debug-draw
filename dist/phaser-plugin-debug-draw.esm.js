@@ -25,7 +25,6 @@ var max = Math.max;
 var sin = Math.sin;
 var ref = Phaser.Scenes.Events;
 var START = ref.START;
-var CREATE = ref.CREATE;
 var PRE_RENDER = ref.PRE_RENDER;
 var SHUTDOWN = ref.SHUTDOWN;
 var DESTROY = ref.DESTROY;
@@ -49,7 +48,6 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
 
     this.systems.events
       .on(START, this.sceneStart, this)
-      .on(CREATE, this.bringToTop, this)
       .on(PRE_RENDER, this.scenePreRender, this)
       .on(SHUTDOWN, this.sceneShutdown, this)
       .once(DESTROY, this.sceneDestroy, this);
@@ -60,7 +58,7 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   };
 
   DebugDrawPlugin.prototype.sceneStart = function sceneStart () {
-    this.graphic = this.scene.add.graphics();
+    this.graphic = this.scene.add.graphics().setDepth(Number.MAX_VALUE);
   };
 
   DebugDrawPlugin.prototype.sceneShutdown = function sceneShutdown () {
@@ -143,7 +141,6 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
   DebugDrawPlugin.prototype.sceneDestroy = function sceneDestroy () {
     this.systems.events
       .off(START, this.sceneStart, this)
-      .off(CREATE, this.bringToTop, this)
       .off(PRE_RENDER, this.scenePreRender, this)
       .off(SHUTDOWN, this.sceneShutdown, this)
       .off(DESTROY, this.sceneDestroy, this);
@@ -287,10 +284,6 @@ var DebugDrawPlugin = /*@__PURE__*/(function (superclass) {
       input.pointer8,
       input.pointer9
     ].filter(Boolean);
-  };
-
-  DebugDrawPlugin.prototype.bringToTop = function bringToTop () {
-    this.systems.displayList.bringToTop(this.graphic);
   };
 
   DebugDrawPlugin.prototype.toggle = function toggle () {

@@ -1,6 +1,6 @@
 {
   "name": "phaser-plugin-debug-draw",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "description": "Simple debug display for Phaser 3",
   "main": "dist/phaser-plugin-debug-draw.umd.js",
   "module": "dist/phaser-plugin-debug-draw.esm.js",
