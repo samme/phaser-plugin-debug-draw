@@ -1,3 +1,8 @@
+7.1.0 / 2023-02-01
+------------------
+
+- Changed: sets graphic depth so it's always on top.
+
 7.0.0 / 2021-05-27
 ------------------
 
