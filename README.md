@@ -24,8 +24,6 @@ Install
 
 The current version of the plugin requires Phaser v3.53.0 or later.
 
-It should also work with Phaser's v3.60.0-beta series, but you'll need to use npm's `--force` to install despite the version conflict.
-
 ### Browser / UMD
 
 Download and add the [plugin UMD script](dist/phaser-plugin-debug-draw.umd.js):
@@ -38,7 +36,7 @@ Download and add the [plugin UMD script](dist/phaser-plugin-debug-draw.umd.js):
 Or use the CDN scripts:
 
 ```html
-<script src='https://cdn.jsdelivr.net/npm/phaser@3.55.2'></script>
+<script src='https://cdn.jsdelivr.net/npm/phaser@3.70.0'></script>
 <script src='https://cdn.jsdelivr.net/npm/phaser-plugin-debug-draw@7.1.0'></script>
 ```
 
@@ -46,12 +44,37 @@ Then add to your game config:
 
 ```js
 /* global PhaserDebugDrawPlugin */
+
 new Phaser.Game({
   plugins: {
     scene: [
       { key: 'DebugDrawPlugin', plugin: PhaserDebugDrawPlugin, mapping: 'debugDraw' }
     ]
   }
+});
+```
+
+Or if you would rather activate the plugin per scene:
+
+```js
+/* global PhaserDebugDrawPlugin */
+
+new Phaser.Game({
+  plugins: {
+    scene: [{ key: 'DebugDrawPlugin', plugin: PhaserDebugDrawPlugin }]
+  },
+  scene: [
+    new Phaser.Scene({
+      key: 'debugDrawScene',
+      plugins: [
+        ...Phaser.Plugins.DefaultPlugins.DefaultScene,
+        'DebugDrawPlugin'
+      ]
+    }),
+    new Phaser.Scene({
+      key: 'noDebugDrawScene'
+    })
+  ]
 });
 ```
 
@@ -70,6 +93,8 @@ new Phaser.Game({
 ```
 
 ### Quick Load
+
+Add to your first scene:
 
 ```js
 function preload () {
