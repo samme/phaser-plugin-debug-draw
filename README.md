@@ -22,7 +22,7 @@ It doesn't show:
 Install
 -------
 
-The current version of the plugin requires Phaser v3.53.0 or later.
+The current version of the plugin requires Phaser v3.53.0 or later. It should work with Phaser v3.80.0-beta.2 as well, but if you're installing the plugin with npm you'll need to use `--force`.
 
 ### Browser / UMD
 
